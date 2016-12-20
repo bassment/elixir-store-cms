@@ -1,0 +1,16 @@
+var _user$project$Components_Main_Actions$HandleSendError = function (a) {
+	return {ctor: 'HandleSendError', _0: a};
+};
+var _user$project$Components_Main_Actions$ReceiveMessage = function (a) {
+	return {ctor: 'ReceiveMessage', _0: a};
+};
+var _user$project$Components_Main_Actions$PhoenixMsg = function (a) {
+	return {ctor: 'PhoenixMsg', _0: a};
+};
+var _user$project$Components_Main_Actions$NewMessage = function (a) {
+	return {ctor: 'NewMessage', _0: a};
+};
+var _user$project$Components_Main_Actions$SendMessage = {ctor: 'SendMessage'};
+var _user$project$Components_Main_Actions$Input = function (a) {
+	return {ctor: 'Input', _0: a};
+};

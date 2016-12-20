@@ -1,0 +1,109 @@
+var _user$project$Components_Main_Update$update = F2(
+	function (action, state) {
+		var _p0 = action;
+		switch (_p0.ctor) {
+			case 'Input':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{input: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'NewMessage':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{
+							messages: {ctor: '::', _0: _p0._0, _1: state.messages}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'PhoenixMsg':
+				var _p1 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p0._0, state.phxSocket);
+				var phxSocket = _p1._0;
+				var phxCmd = _p1._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{phxSocket: phxSocket}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Components_Main_Actions$PhoenixMsg, phxCmd)
+				};
+			case 'SendMessage':
+				var payload = _elm_lang$core$Json_Encode$object(
+					{
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'message',
+							_1: _elm_lang$core$Json_Encode$string(state.input)
+						},
+						_1: {ctor: '[]'}
+					});
+				var phxPush = A2(
+					_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+					_user$project$Components_Main_Actions$HandleSendError,
+					A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onOk,
+						_user$project$Components_Main_Actions$ReceiveMessage,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'shout', 'room:lobby'))));
+				var _p2 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, phxPush, state.phxSocket);
+				var phxSocket = _p2._0;
+				var phxCmd = _p2._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{phxSocket: phxSocket}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Components_Main_Actions$PhoenixMsg, phxCmd)
+				};
+			case 'ReceiveMessage':
+				var messageDecoder = A2(
+					_elm_lang$core$Json_Decode$at,
+					{
+						ctor: '::',
+						_0: 'message',
+						_1: {ctor: '[]'}
+					},
+					_elm_lang$core$Json_Decode$string);
+				var somePayload = A2(_elm_lang$core$Json_Decode$decodeValue, messageDecoder, _p0._0);
+				var _p3 = somePayload;
+				if (_p3.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							state,
+							{
+								messages: {ctor: '::', _0: _p3._0, _1: state.messages}
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							state,
+							{
+								messages: {ctor: '::', _0: 'Failed to receive message', _1: state.messages}
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				var message = 'Failed to Send Message';
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{
+							messages: {ctor: '::', _0: message, _1: state.messages}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
