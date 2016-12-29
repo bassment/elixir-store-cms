@@ -1,3 +1,6 @@
+var _user$project$Components_Main_Actions$OnLocationChange = function (a) {
+	return {ctor: 'OnLocationChange', _0: a};
+};
 var _user$project$Components_Main_Actions$HandleSendError = function (a) {
 	return {ctor: 'HandleSendError', _0: a};
 };

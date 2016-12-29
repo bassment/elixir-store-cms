@@ -1,4 +1,17 @@
-var _user$project$Components_Main_State$init = function () {
+var _user$project$Components_Main_State$initialState = F2(
+	function (initSocket, route) {
+		return {
+			input: '',
+			messages: {
+				ctor: '::',
+				_0: 'Test message',
+				_1: {ctor: '[]'}
+			},
+			phxSocket: initSocket,
+			route: route
+		};
+	});
+var _user$project$Components_Main_State$init = function (location) {
 	var channel = _fbonetti$elm_phoenix_socket$Phoenix_Channel$init('room:lobby');
 	var _p0 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
@@ -12,22 +25,14 @@ var _user$project$Components_Main_State$init = function () {
 				_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket'))));
 	var initSocket = _p0._0;
 	var phxCmd = _p0._1;
-	var state = {
-		input: '',
-		messages: {
-			ctor: '::',
-			_0: 'Test message',
-			_1: {ctor: '[]'}
-		},
-		phxSocket: initSocket
-	};
+	var currentRoute = _user$project$Routing$parseLocation(location);
 	return {
 		ctor: '_Tuple2',
-		_0: state,
+		_0: A2(_user$project$Components_Main_State$initialState, initSocket, currentRoute),
 		_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Components_Main_Actions$PhoenixMsg, phxCmd)
 	};
-}();
-var _user$project$Components_Main_State$State = F3(
-	function (a, b, c) {
-		return {input: a, messages: b, phxSocket: c};
+};
+var _user$project$Components_Main_State$State = F4(
+	function (a, b, c, d) {
+		return {route: a, input: b, messages: c, phxSocket: d};
 	});

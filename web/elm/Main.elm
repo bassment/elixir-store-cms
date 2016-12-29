@@ -1,7 +1,7 @@
 module Main exposing (..)
 
-import Html exposing (Html, div)
-import Html.Attributes exposing (class)
+import Html exposing (Html, div, a, text)
+import Html.Attributes exposing (class, href)
 
 import Components.Main.State exposing (State, init)
 import Components.Main.Actions exposing (Action(..))
@@ -11,13 +11,17 @@ import Components.Main.View exposing (chatView)
 import Phoenix.Socket as Socket
 import Phoenix.Channel
 
+import Routing exposing (..)
+import Navigation
+
+
 main =
-  Html.program
-    { init = init
-    , view = view
-    , update = update
-    , subscriptions = subscriptions
-    }
+  Navigation.program OnLocationChange {
+    init = init,
+    view = view,
+    update = update,
+    subscriptions = subscriptions
+  }
 
 
 -- SUBSCRIPTIONS
@@ -31,4 +35,40 @@ subscriptions state =
 
 view : State -> Html Action
 view state =
-  div [ class "elm-app" ] [ chatView state ]
+  div [ class "elm-app" ] [ page state ]
+
+
+page : State -> Html Action
+page state =
+  case state.route of
+    HomeRoute ->
+      linksView
+
+    ProductsRoute ->
+      productsView
+
+    NotFoundRoute ->
+      notFoundView
+
+
+linksView : Html Action
+linksView =
+  div []
+    [
+      a [ href ("#products") ] [ text "Products" ],
+      a [ href ("#chat") ] [ text "Chat" ]
+    ]
+
+
+productsView: Html Action
+productsView =
+  div []
+    [
+      text "Products"
+    ]
+
+
+notFoundView : Html Action
+notFoundView =
+  div []
+    [ text "Not found" ]

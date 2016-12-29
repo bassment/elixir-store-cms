@@ -10,9 +10,18 @@ import Phoenix.Socket as ClientSocket
 import Phoenix.Push
 import Phoenix.Channel
 
+import Routing exposing (parseLocation)
+
 update : Action -> State -> (State, Cmd Action)
 update action state =
   case action of
+    OnLocationChange location ->
+            let
+              newRoute =
+                parseLocation location
+            in
+              ( { state | route = newRoute }, Cmd.none )
+
     Input newInput ->
       ( { state | input = newInput }, Cmd.none)
 
