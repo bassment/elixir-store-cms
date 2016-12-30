@@ -23,8 +23,6 @@ main =
   }
 
 
--- SUBSCRIPTIONS
-
 subscriptions : State -> Sub Action
 subscriptions state =
   Socket.listen state.phxSocket PhoenixMsg

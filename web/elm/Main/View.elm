@@ -1,15 +1,16 @@
 module Main.View exposing (view)
 
-import Html exposing (Html, div, input, text, button, a)
-import Html.Attributes exposing (class, href)
-import Html.Events exposing (onInput, onClick)
+import Html exposing (Html, div, text)
+import Html.Attributes exposing (class)
 
 import Main.Actions exposing (Action(..))
 import Main.State exposing (State)
-import Components.Products.View exposing(productsView)
+import Main.Views.Navigation exposing (navigationView)
+import Main.Views.Chat exposing (chatView)
+
+import Components.Products.View exposing (productsView)
 
 import Routing exposing (..)
-import Helpers.ViewHelper exposing (toCapital)
 
 
 view : State -> Html Action
@@ -34,10 +35,8 @@ homePageView : State -> Html Action
 homePageView state =
   div []
     [
-      div [] (List.map viewLink ["home", "products"]),
-      div [] (List.map viewMessage state.messages),
-      input [ onInput Input ] [],
-      button [ onClick SendMessage ] [text "Send"]
+      navigationView,
+      chatView state
     ]
 
 
@@ -45,19 +44,9 @@ productsPageView : Html Action
 productsPageView =
   div []
     [
-      div [] (List.map viewLink ["home", "products"]),
-      div [] [ productsView ]
+      navigationView,
+      productsView
     ]
-
-
-viewLink : String -> Html Action
-viewLink link =
-      a [ href ("#" ++ link) ] [ text (toCapital link ++ " ") ]
-
-
-viewMessage : String -> Html Action
-viewMessage msg =
-  div [] [ text msg ]
 
 
 notFoundView : Html Action

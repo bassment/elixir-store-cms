@@ -11142,25 +11142,7 @@ var _user$project$Main_Update$update = F2(
 		}
 	});
 
-var _user$project$Main_View$notFoundView = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Not found'),
-		_1: {ctor: '[]'}
-	});
-var _user$project$Main_View$viewMessage = function (msg) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(msg),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main_View$viewLink = function (link) {
+var _user$project$Main_Views_Navigation$linkView = function (link) {
 	return A2(
 		_elm_lang$html$Html$a,
 		{
@@ -11179,36 +11161,89 @@ var _user$project$Main_View$viewLink = function (link) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Main_Views_Navigation$navigationView = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	A2(
+		_elm_lang$core$List$map,
+		_user$project$Main_Views_Navigation$linkView,
+		{
+			ctor: '::',
+			_0: 'home',
+			_1: {
+				ctor: '::',
+				_0: 'products',
+				_1: {ctor: '[]'}
+			}
+		}));
+
+var _user$project$Main_Views_Chat$messageView = function (msg) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(msg),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main_Views_Chat$chatView = function (state) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				A2(_elm_lang$core$List$map, _user$project$Main_Views_Chat$messageView, state.messages)),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onInput(_user$project$Main_Actions$Input),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main_Actions$SendMessage),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Send'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+
+var _user$project$Main_View$notFoundView = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Not found'),
+		_1: {ctor: '[]'}
+	});
 var _user$project$Main_View$productsPageView = A2(
 	_elm_lang$html$Html$div,
 	{ctor: '[]'},
 	{
 		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$div,
-			{ctor: '[]'},
-			A2(
-				_elm_lang$core$List$map,
-				_user$project$Main_View$viewLink,
-				{
-					ctor: '::',
-					_0: 'home',
-					_1: {
-						ctor: '::',
-						_0: 'products',
-						_1: {ctor: '[]'}
-					}
-				})),
+		_0: _user$project$Main_Views_Navigation$navigationView,
 		_1: {
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _user$project$Components_Products_View$productsView,
-					_1: {ctor: '[]'}
-				}),
+			_0: _user$project$Components_Products_View$productsView,
 			_1: {ctor: '[]'}
 		}
 	});
@@ -11218,54 +11253,11 @@ var _user$project$Main_View$homePageView = function (state) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				A2(
-					_elm_lang$core$List$map,
-					_user$project$Main_View$viewLink,
-					{
-						ctor: '::',
-						_0: 'home',
-						_1: {
-							ctor: '::',
-							_0: 'products',
-							_1: {ctor: '[]'}
-						}
-					})),
+			_0: _user$project$Main_Views_Navigation$navigationView,
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _user$project$Main_View$viewMessage, state.messages)),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$input,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onInput(_user$project$Main_Actions$Input),
-							_1: {ctor: '[]'}
-						},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$button,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main_Actions$SendMessage),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Send'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}
+				_0: _user$project$Main_Views_Chat$chatView(state),
+				_1: {ctor: '[]'}
 			}
 		});
 };
