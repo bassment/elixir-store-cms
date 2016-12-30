@@ -43,7 +43,7 @@ exports.config = {
     watched: [
       "web/static",
       "test/static",
-      "web/elm"
+      "web/elm/src"
     ],
 
     // Where to compile files to
@@ -58,8 +58,12 @@ exports.config = {
     },
     elmBrunch: {
       elmFolder: 'web/elm',
-      mainModules: ['Main.elm'],
+      mainModules: ['src/Main.elm'],
       outputFolder: '../static/js'
+    },
+    elmCssBrunch: {
+      root: process.cwd() + '/web/elm',
+      output: process.cwd() + '/web/static/css'
     }
   },
 
