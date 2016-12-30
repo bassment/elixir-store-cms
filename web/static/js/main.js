@@ -10935,6 +10935,23 @@ var _user$project$Main_Actions$Input = function (a) {
 	return {ctor: 'Input', _0: a};
 };
 
+var _user$project$Components_Products_View$productsView = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Products'),
+		_1: {ctor: '[]'}
+	});
+
+var _user$project$Helpers_ViewHelper$toCapital = function (str) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$String$toUpper(
+			A2(_elm_lang$core$String$left, 1, str)),
+		A2(_elm_lang$core$String$dropLeft, 1, str));
+};
+
 var _user$project$Routing$NotFoundRoute = {ctor: 'NotFoundRoute'};
 var _user$project$Routing$ProductsRoute = {ctor: 'ProductsRoute'};
 var _user$project$Routing$HomeRoute = {ctor: 'HomeRoute'};
@@ -10946,9 +10963,16 @@ var _user$project$Routing$matchers = _evancz$url_parser$UrlParser$oneOf(
 			ctor: '::',
 			_0: A2(
 				_evancz$url_parser$UrlParser$map,
-				_user$project$Routing$ProductsRoute,
-				_evancz$url_parser$UrlParser$s('products')),
-			_1: {ctor: '[]'}
+				_user$project$Routing$HomeRoute,
+				_evancz$url_parser$UrlParser$s('home')),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_evancz$url_parser$UrlParser$map,
+					_user$project$Routing$ProductsRoute,
+					_evancz$url_parser$UrlParser$s('products')),
+				_1: {ctor: '[]'}
+			}
 		}
 	});
 var _user$project$Routing$parseLocation = function (location) {
@@ -11118,6 +11142,14 @@ var _user$project$Main_Update$update = F2(
 		}
 	});
 
+var _user$project$Main_View$notFoundView = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Not found'),
+		_1: {ctor: '[]'}
+	});
 var _user$project$Main_View$viewMessage = function (msg) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -11128,7 +11160,59 @@ var _user$project$Main_View$viewMessage = function (msg) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main_View$chatView = function (state) {
+var _user$project$Main_View$viewLink = function (link) {
+	return A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$href(
+				A2(_elm_lang$core$Basics_ops['++'], '#', link)),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_user$project$Helpers_ViewHelper$toCapital(link),
+					' ')),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main_View$productsPageView = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			A2(
+				_elm_lang$core$List$map,
+				_user$project$Main_View$viewLink,
+				{
+					ctor: '::',
+					_0: 'home',
+					_1: {
+						ctor: '::',
+						_0: 'products',
+						_1: {ctor: '[]'}
+					}
+				})),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _user$project$Components_Products_View$productsView,
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Main_View$homePageView = function (state) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -11137,99 +11221,66 @@ var _user$project$Main_View$chatView = function (state) {
 			_0: A2(
 				_elm_lang$html$Html$div,
 				{ctor: '[]'},
-				A2(_elm_lang$core$List$map, _user$project$Main_View$viewMessage, state.messages)),
+				A2(
+					_elm_lang$core$List$map,
+					_user$project$Main_View$viewLink,
+					{
+						ctor: '::',
+						_0: 'home',
+						_1: {
+							ctor: '::',
+							_0: 'products',
+							_1: {ctor: '[]'}
+						}
+					})),
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$input,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onInput(_user$project$Main_Actions$Input),
-						_1: {ctor: '[]'}
-					},
-					{ctor: '[]'}),
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					A2(_elm_lang$core$List$map, _user$project$Main_View$viewMessage, state.messages)),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$button,
+						_elm_lang$html$Html$input,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main_Actions$SendMessage),
+							_0: _elm_lang$html$Html_Events$onInput(_user$project$Main_Actions$Input),
 							_1: {ctor: '[]'}
 						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Send'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main_Actions$SendMessage),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Send'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
 };
-
-var _user$project$Main$notFoundView = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Not found'),
-		_1: {ctor: '[]'}
-	});
-var _user$project$Main$productsView = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Products'),
-		_1: {ctor: '[]'}
-	});
-var _user$project$Main$linksView = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$a,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$href('#products'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Products'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$a,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$href('#chat'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Chat'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
-	});
-var _user$project$Main$page = function (state) {
+var _user$project$Main_View$page = function (state) {
 	var _p0 = state.route;
 	switch (_p0.ctor) {
 		case 'HomeRoute':
-			return _user$project$Main$linksView;
+			return _user$project$Main_View$homePageView(state);
 		case 'ProductsRoute':
-			return _user$project$Main$productsView;
+			return _user$project$Main_View$productsPageView;
 		default:
-			return _user$project$Main$notFoundView;
+			return _user$project$Main_View$notFoundView;
 	}
 };
-var _user$project$Main$view = function (state) {
+var _user$project$Main_View$view = function (state) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -11239,17 +11290,18 @@ var _user$project$Main$view = function (state) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Main$page(state),
+			_0: _user$project$Main_View$page(state),
 			_1: {ctor: '[]'}
 		});
 };
+
 var _user$project$Main$subscriptions = function (state) {
 	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, state.phxSocket, _user$project$Main_Actions$PhoenixMsg);
 };
 var _user$project$Main$main = A2(
 	_elm_lang$navigation$Navigation$program,
 	_user$project$Main_Actions$OnLocationChange,
-	{init: _user$project$Main_State$init, view: _user$project$Main$view, update: _user$project$Main_Update$update, subscriptions: _user$project$Main$subscriptions})();
+	{init: _user$project$Main_State$init, view: _user$project$Main_View$view, update: _user$project$Main_Update$update, subscriptions: _user$project$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
