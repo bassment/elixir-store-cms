@@ -1,7 +1,7 @@
-module Components.Main.Update exposing (update)
+module Main.Update exposing (update)
 
-import Components.Main.State exposing (State)
-import Components.Main.Actions exposing (Action(..))
+import Main.State exposing (State)
+import Main.Actions exposing (Action(..))
 
 import Json.Encode as JsEncode
 import Json.Decode as JsDecode exposing (decodeString, decodeValue, at)

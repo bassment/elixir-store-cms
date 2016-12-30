@@ -1,10 +1,10 @@
-module Components.Main.View exposing (chatView)
+module Main.View exposing (chatView)
 
 import Html exposing (Html, div, input, text, button)
 import Html.Events exposing (onInput, onClick)
 
-import Components.Main.Actions exposing (Action(..))
-import Components.Main.State exposing (State)
+import Main.Actions exposing (Action(..))
+import Main.State exposing (State)
 
 chatView : State -> Html Action
 chatView state =

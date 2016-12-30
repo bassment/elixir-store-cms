@@ -10910,30 +10910,30 @@ var _fbonetti$elm_phoenix_socket$Phoenix_Socket$listen = F2(
 			});
 	});
 
-var _user$project$Components_Main_Actions$OnLocationChange = function (a) {
-	return {ctor: 'OnLocationChange', _0: a};
-};
-var _user$project$Components_Main_Actions$HandleSendError = function (a) {
-	return {ctor: 'HandleSendError', _0: a};
-};
-var _user$project$Components_Main_Actions$ReceiveMessage = function (a) {
-	return {ctor: 'ReceiveMessage', _0: a};
-};
-var _user$project$Components_Main_Actions$PhoenixMsg = function (a) {
-	return {ctor: 'PhoenixMsg', _0: a};
-};
-var _user$project$Components_Main_Actions$NewMessage = function (a) {
-	return {ctor: 'NewMessage', _0: a};
-};
-var _user$project$Components_Main_Actions$SendMessage = {ctor: 'SendMessage'};
-var _user$project$Components_Main_Actions$Input = function (a) {
-	return {ctor: 'Input', _0: a};
-};
-
 var _user$project$Components_Products_State$Product = F4(
 	function (a, b, c, d) {
 		return {id: a, title: b, price: c, image: d};
 	});
+
+var _user$project$Main_Actions$OnLocationChange = function (a) {
+	return {ctor: 'OnLocationChange', _0: a};
+};
+var _user$project$Main_Actions$HandleSendError = function (a) {
+	return {ctor: 'HandleSendError', _0: a};
+};
+var _user$project$Main_Actions$ReceiveMessage = function (a) {
+	return {ctor: 'ReceiveMessage', _0: a};
+};
+var _user$project$Main_Actions$PhoenixMsg = function (a) {
+	return {ctor: 'PhoenixMsg', _0: a};
+};
+var _user$project$Main_Actions$NewMessage = function (a) {
+	return {ctor: 'NewMessage', _0: a};
+};
+var _user$project$Main_Actions$SendMessage = {ctor: 'SendMessage'};
+var _user$project$Main_Actions$Input = function (a) {
+	return {ctor: 'Input', _0: a};
+};
 
 var _user$project$Routing$NotFoundRoute = {ctor: 'NotFoundRoute'};
 var _user$project$Routing$ProductsRoute = {ctor: 'ProductsRoute'};
@@ -10960,7 +10960,7 @@ var _user$project$Routing$parseLocation = function (location) {
 	}
 };
 
-var _user$project$Components_Main_State$initialState = F2(
+var _user$project$Main_State$initialState = F2(
 	function (initSocket, route) {
 		return {
 			input: '',
@@ -10973,7 +10973,7 @@ var _user$project$Components_Main_State$initialState = F2(
 			route: route
 		};
 	});
-var _user$project$Components_Main_State$init = function (location) {
+var _user$project$Main_State$init = function (location) {
 	var channel = _fbonetti$elm_phoenix_socket$Phoenix_Channel$init('room:lobby');
 	var _p0 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
@@ -10982,7 +10982,7 @@ var _user$project$Components_Main_State$init = function (location) {
 			_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
 			'shout',
 			'room:lobby',
-			_user$project$Components_Main_Actions$ReceiveMessage,
+			_user$project$Main_Actions$ReceiveMessage,
 			_fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
 				_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket'))));
 	var initSocket = _p0._0;
@@ -10990,16 +10990,16 @@ var _user$project$Components_Main_State$init = function (location) {
 	var currentRoute = _user$project$Routing$parseLocation(location);
 	return {
 		ctor: '_Tuple2',
-		_0: A2(_user$project$Components_Main_State$initialState, initSocket, currentRoute),
-		_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Components_Main_Actions$PhoenixMsg, phxCmd)
+		_0: A2(_user$project$Main_State$initialState, initSocket, currentRoute),
+		_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main_Actions$PhoenixMsg, phxCmd)
 	};
 };
-var _user$project$Components_Main_State$State = F4(
+var _user$project$Main_State$State = F4(
 	function (a, b, c, d) {
 		return {route: a, input: b, messages: c, phxSocket: d};
 	});
 
-var _user$project$Components_Main_Update$update = F2(
+var _user$project$Main_Update$update = F2(
 	function (action, state) {
 		var _p0 = action;
 		switch (_p0.ctor) {
@@ -11039,7 +11039,7 @@ var _user$project$Components_Main_Update$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						state,
 						{phxSocket: phxSocket}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Components_Main_Actions$PhoenixMsg, phxCmd)
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main_Actions$PhoenixMsg, phxCmd)
 				};
 			case 'SendMessage':
 				var payload = _elm_lang$core$Json_Encode$object(
@@ -11054,10 +11054,10 @@ var _user$project$Components_Main_Update$update = F2(
 					});
 				var phxPush = A2(
 					_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
-					_user$project$Components_Main_Actions$HandleSendError,
+					_user$project$Main_Actions$HandleSendError,
 					A2(
 						_fbonetti$elm_phoenix_socket$Phoenix_Push$onOk,
-						_user$project$Components_Main_Actions$ReceiveMessage,
+						_user$project$Main_Actions$ReceiveMessage,
 						A2(
 							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
 							payload,
@@ -11070,7 +11070,7 @@ var _user$project$Components_Main_Update$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						state,
 						{phxSocket: phxSocket}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Components_Main_Actions$PhoenixMsg, phxCmd)
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main_Actions$PhoenixMsg, phxCmd)
 				};
 			case 'ReceiveMessage':
 				var messageDecoder = A2(
@@ -11118,7 +11118,7 @@ var _user$project$Components_Main_Update$update = F2(
 		}
 	});
 
-var _user$project$Components_Main_View$viewMessage = function (msg) {
+var _user$project$Main_View$viewMessage = function (msg) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -11128,7 +11128,7 @@ var _user$project$Components_Main_View$viewMessage = function (msg) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Components_Main_View$chatView = function (state) {
+var _user$project$Main_View$chatView = function (state) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -11137,14 +11137,14 @@ var _user$project$Components_Main_View$chatView = function (state) {
 			_0: A2(
 				_elm_lang$html$Html$div,
 				{ctor: '[]'},
-				A2(_elm_lang$core$List$map, _user$project$Components_Main_View$viewMessage, state.messages)),
+				A2(_elm_lang$core$List$map, _user$project$Main_View$viewMessage, state.messages)),
 			_1: {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$input,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onInput(_user$project$Components_Main_Actions$Input),
+						_0: _elm_lang$html$Html_Events$onInput(_user$project$Main_Actions$Input),
 						_1: {ctor: '[]'}
 					},
 					{ctor: '[]'}),
@@ -11154,7 +11154,7 @@ var _user$project$Components_Main_View$chatView = function (state) {
 						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_user$project$Components_Main_Actions$SendMessage),
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main_Actions$SendMessage),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -11244,12 +11244,12 @@ var _user$project$Main$view = function (state) {
 		});
 };
 var _user$project$Main$subscriptions = function (state) {
-	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, state.phxSocket, _user$project$Components_Main_Actions$PhoenixMsg);
+	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, state.phxSocket, _user$project$Main_Actions$PhoenixMsg);
 };
 var _user$project$Main$main = A2(
 	_elm_lang$navigation$Navigation$program,
-	_user$project$Components_Main_Actions$OnLocationChange,
-	{init: _user$project$Components_Main_State$init, view: _user$project$Main$view, update: _user$project$Components_Main_Update$update, subscriptions: _user$project$Main$subscriptions})();
+	_user$project$Main_Actions$OnLocationChange,
+	{init: _user$project$Main_State$init, view: _user$project$Main$view, update: _user$project$Main_Update$update, subscriptions: _user$project$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

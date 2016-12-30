@@ -1,4 +1,4 @@
-module Components.Main.Actions exposing (..)
+module Main.Actions exposing (..)
 
 import Phoenix.Socket as Socket
 import Json.Encode as JsEncode

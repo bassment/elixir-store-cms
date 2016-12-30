@@ -3,10 +3,10 @@ module Main exposing (..)
 import Html exposing (Html, div, a, text)
 import Html.Attributes exposing (class, href)
 
-import Components.Main.State exposing (State, init)
-import Components.Main.Actions exposing (Action(..))
-import Components.Main.Update exposing (update)
-import Components.Main.View exposing (chatView)
+import Main.State exposing (State, init)
+import Main.Actions exposing (Action(..))
+import Main.Update exposing (update)
+import Main.View exposing (chatView)
 
 import Phoenix.Socket as Socket
 import Phoenix.Channel

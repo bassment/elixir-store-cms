@@ -1,6 +1,6 @@
-module Components.Main.State exposing (State, init)
+module Main.State exposing (State, init)
 
-import Components.Main.Actions exposing (Action(..))
+import Main.Actions exposing (Action(..))
 
 import Phoenix.Socket
 import Phoenix.Channel
@@ -8,11 +8,11 @@ import Phoenix.Channel
 import Routing
 import Navigation exposing (Location)
 
-type alias State = {
-    route : Routing.Route,
-    input : String,
-    messages : List String,
-    phxSocket : Phoenix.Socket.Socket Action
+type alias State =
+  { route : Routing.Route
+  , input : String
+  , messages : List String
+  , phxSocket : Phoenix.Socket.Socket Action
   }
 
 initialState : Phoenix.Socket.Socket Action -> Routing.Route -> State
