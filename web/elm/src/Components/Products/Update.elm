@@ -1,11 +1,11 @@
-module Players.Update exposing (..)
+module Components.Products.Update exposing (..)
 
-import Players.Messages exposing (Msg(..))
-import Players.Models exposing (Player)
+import Components.Products.Actions exposing (Action(..))
+import Components.Products.State exposing (Product)
 
 
-update : Msg -> List Player -> ( List Player, Cmd Msg )
-update message players =
-    case message of
+update : Action -> List Product -> ( List Product, Cmd Msg )
+update action products =
+    case action of
         NoOp ->
-            ( players, Cmd.none )
+            ( products, Cmd.none )

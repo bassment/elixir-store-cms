@@ -15992,27 +15992,48 @@ var _user$project$Main_Actions$Input = function (a) {
 	return {ctor: 'Input', _0: a};
 };
 
+var _user$project$Components_Products_View$productItemView = function (product) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					product.title,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						': ',
+						_elm_lang$core$Basics$toString(product.price)))),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Components_Products_View$productsListView = function (products) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _user$project$Components_Products_View$productItemView, products));
+};
 var _user$project$Components_Products_View$_p0 = _user$project$SharedStyles$productsNamespace;
 var _user$project$Components_Products_View$id = _user$project$Components_Products_View$_p0.id;
 var _user$project$Components_Products_View$class = _user$project$Components_Products_View$_p0.$class;
 var _user$project$Components_Products_View$classList = _user$project$Components_Products_View$_p0.classList;
 var _user$project$Components_Products_View$productsView = A2(
 	_elm_lang$html$Html$div,
-	{ctor: '[]'},
 	{
 		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$img,
+		_0: _user$project$Components_Products_View$class(
 			{
 				ctor: '::',
-				_0: _user$project$Components_Products_View$id(_user$project$SharedStyles$ReactiveLogo),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$src('images/phoenix.png'),
-					_1: {ctor: '[]'}
-				}
-			},
-			{ctor: '[]'}),
+				_0: 'container',
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Products'),
 		_1: {ctor: '[]'}
 	});
 

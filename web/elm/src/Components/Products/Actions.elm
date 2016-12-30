@@ -1,4 +1,4 @@
-module Components.Products.Actions exposing (..)
+module Products.Actions exposing (..)
 
 type Action
     = NoOp
