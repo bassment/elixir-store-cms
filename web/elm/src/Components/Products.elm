@@ -1,14 +1,39 @@
-module Components.Products.View exposing (productsView)
+module Products exposing (productsView)
 
-import Products.ProductsCss exposing (..)
+import ProductsCss exposing (..)
 import SharedStyles exposing (..)
 
 import Html exposing (..)
 import Html.CssHelpers exposing (..)
 import Html.Attributes exposing (..)
 
-import Main.Actions exposing (Action(..))
-import Components.Products.State exposing (Product)
+
+-- STATE
+
+type alias ProductId = Int
+
+type alias Product =
+  { id : ProductId
+  , title : String
+  , price : Int
+  , image : String
+  }
+
+
+-- ACTIONS AND UPDATE
+
+type Action
+    = NoOp
+
+
+update : Action -> List Product -> ( List Product, Cmd Action )
+update action products =
+    case action of
+        NoOp ->
+            ( products, Cmd.none )
+
+
+-- VIEW
 
 { id, class, classList } =
     productsNamespace

@@ -3,12 +3,11 @@ module Routing exposing (..)
 import String
 import Navigation exposing (Location)
 import UrlParser exposing (..)
-import Components.Products.State exposing (ProductId)
+
 
 type Route
   = HomeRoute
   | ProductsRoute
-  -- | ProductRoute ProductId
   | NotFoundRoute
 
 
@@ -18,7 +17,6 @@ matchers =
     [
       map HomeRoute (top),
       map HomeRoute (s "home"),
-      -- map ProductRoute (s "product" </> int),
       map ProductsRoute (s "products")
     ]
 

@@ -1,4 +1,4 @@
-module Products.ProductsCss exposing (css)
+module ProductsCss exposing (css)
 
 import Css exposing (..)
 import Css.Elements exposing (..)

@@ -15817,17 +15817,52 @@ var _rtfeldman$elm_css_helpers$Html_CssHelpers$Namespace = F4(
 		return {$class: a, classList: b, id: c, name: d};
 	});
 
-var _user$project$Components_Products_State$Product = F4(
-	function (a, b, c, d) {
-		return {id: a, title: b, price: c, image: d};
+var _user$project$Helpers_ViewHelper$toCapital = function (str) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$String$toUpper(
+			A2(_elm_lang$core$String$left, 1, str)),
+		A2(_elm_lang$core$String$dropLeft, 1, str));
+};
+
+var _user$project$Routing$NotFoundRoute = {ctor: 'NotFoundRoute'};
+var _user$project$Routing$ProductsRoute = {ctor: 'ProductsRoute'};
+var _user$project$Routing$HomeRoute = {ctor: 'HomeRoute'};
+var _user$project$Routing$matchers = _evancz$url_parser$UrlParser$oneOf(
+	{
+		ctor: '::',
+		_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Routing$HomeRoute, _evancz$url_parser$UrlParser$top),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_evancz$url_parser$UrlParser$map,
+				_user$project$Routing$HomeRoute,
+				_evancz$url_parser$UrlParser$s('home')),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_evancz$url_parser$UrlParser$map,
+					_user$project$Routing$ProductsRoute,
+					_evancz$url_parser$UrlParser$s('products')),
+				_1: {ctor: '[]'}
+			}
+		}
 	});
+var _user$project$Routing$parseLocation = function (location) {
+	var _p0 = A2(_evancz$url_parser$UrlParser$parseHash, _user$project$Routing$matchers, location);
+	if (_p0.ctor === 'Just') {
+		return _p0._0;
+	} else {
+		return _user$project$Routing$NotFoundRoute;
+	}
+};
 
 var _user$project$SharedStyles$productsNamespace = _rtfeldman$elm_css_helpers$Html_CssHelpers$withNamespace('products');
 var _user$project$SharedStyles$NavLink = {ctor: 'NavLink'};
 var _user$project$SharedStyles$BuyTickets = {ctor: 'BuyTickets'};
 var _user$project$SharedStyles$ReactiveLogo = {ctor: 'ReactiveLogo'};
 
-var _user$project$Products_ProductsCss$css = function (_p0) {
+var _user$project$ProductsCss$css = function (_p0) {
 	return _rtfeldman$elm_css$Css$stylesheet(
 		A2(_rtfeldman$elm_css$Css_Namespace$namespace, _user$project$SharedStyles$productsNamespace.name, _p0));
 }(
@@ -15972,27 +16007,7 @@ var _user$project$Products_ProductsCss$css = function (_p0) {
 		}
 	});
 
-var _user$project$Main_Actions$OnLocationChange = function (a) {
-	return {ctor: 'OnLocationChange', _0: a};
-};
-var _user$project$Main_Actions$HandleSendError = function (a) {
-	return {ctor: 'HandleSendError', _0: a};
-};
-var _user$project$Main_Actions$ReceiveMessage = function (a) {
-	return {ctor: 'ReceiveMessage', _0: a};
-};
-var _user$project$Main_Actions$PhoenixMsg = function (a) {
-	return {ctor: 'PhoenixMsg', _0: a};
-};
-var _user$project$Main_Actions$NewMessage = function (a) {
-	return {ctor: 'NewMessage', _0: a};
-};
-var _user$project$Main_Actions$SendMessage = {ctor: 'SendMessage'};
-var _user$project$Main_Actions$Input = function (a) {
-	return {ctor: 'Input', _0: a};
-};
-
-var _user$project$Components_Products_View$productItemView = function (product) {
+var _user$project$Products$productItemView = function (product) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -16009,21 +16024,21 @@ var _user$project$Components_Products_View$productItemView = function (product) 
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Components_Products_View$productsListView = function (products) {
+var _user$project$Products$productsListView = function (products) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
-		A2(_elm_lang$core$List$map, _user$project$Components_Products_View$productItemView, products));
+		A2(_elm_lang$core$List$map, _user$project$Products$productItemView, products));
 };
-var _user$project$Components_Products_View$_p0 = _user$project$SharedStyles$productsNamespace;
-var _user$project$Components_Products_View$id = _user$project$Components_Products_View$_p0.id;
-var _user$project$Components_Products_View$class = _user$project$Components_Products_View$_p0.$class;
-var _user$project$Components_Products_View$classList = _user$project$Components_Products_View$_p0.classList;
-var _user$project$Components_Products_View$productsView = A2(
+var _user$project$Products$_p0 = _user$project$SharedStyles$productsNamespace;
+var _user$project$Products$id = _user$project$Products$_p0.id;
+var _user$project$Products$class = _user$project$Products$_p0.$class;
+var _user$project$Products$classList = _user$project$Products$_p0.classList;
+var _user$project$Products$productsView = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
-		_0: _user$project$Components_Products_View$class(
+		_0: _user$project$Products$class(
 			{
 				ctor: '::',
 				_0: 'container',
@@ -16036,48 +16051,78 @@ var _user$project$Components_Products_View$productsView = A2(
 		_0: _elm_lang$html$Html$text('Products'),
 		_1: {ctor: '[]'}
 	});
+var _user$project$Products$update = F2(
+	function (action, products) {
+		var _p1 = action;
+		return {ctor: '_Tuple2', _0: products, _1: _elm_lang$core$Platform_Cmd$none};
+	});
+var _user$project$Products$Product = F4(
+	function (a, b, c, d) {
+		return {id: a, title: b, price: c, image: d};
+	});
+var _user$project$Products$NoOp = {ctor: 'NoOp'};
 
-var _user$project$Helpers_ViewHelper$toCapital = function (str) {
+var _user$project$Main$viewMessage = function (msg) {
 	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		_elm_lang$core$String$toUpper(
-			A2(_elm_lang$core$String$left, 1, str)),
-		A2(_elm_lang$core$String$dropLeft, 1, str));
-};
-
-var _user$project$Routing$NotFoundRoute = {ctor: 'NotFoundRoute'};
-var _user$project$Routing$ProductsRoute = {ctor: 'ProductsRoute'};
-var _user$project$Routing$HomeRoute = {ctor: 'HomeRoute'};
-var _user$project$Routing$matchers = _evancz$url_parser$UrlParser$oneOf(
-	{
-		ctor: '::',
-		_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Routing$HomeRoute, _evancz$url_parser$UrlParser$top),
-		_1: {
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
 			ctor: '::',
-			_0: A2(
-				_evancz$url_parser$UrlParser$map,
-				_user$project$Routing$HomeRoute,
-				_evancz$url_parser$UrlParser$s('home')),
+			_0: _elm_lang$html$Html$text(msg),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$viewLink = function (link) {
+	return A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$href(
+				A2(_elm_lang$core$Basics_ops['++'], '#', link)),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_user$project$Helpers_ViewHelper$toCapital(link),
+					' ')),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$viewNavigation = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	A2(
+		_elm_lang$core$List$map,
+		_user$project$Main$viewLink,
+		{
+			ctor: '::',
+			_0: 'home',
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_evancz$url_parser$UrlParser$map,
-					_user$project$Routing$ProductsRoute,
-					_evancz$url_parser$UrlParser$s('products')),
+				_0: 'products',
 				_1: {ctor: '[]'}
 			}
-		}
+		}));
+var _user$project$Main$viewNotFound = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Not found'),
+		_1: {ctor: '[]'}
 	});
-var _user$project$Routing$parseLocation = function (location) {
-	var _p0 = A2(_evancz$url_parser$UrlParser$parseHash, _user$project$Routing$matchers, location);
-	if (_p0.ctor === 'Just') {
-		return _p0._0;
-	} else {
-		return _user$project$Routing$NotFoundRoute;
-	}
-};
-
-var _user$project$Main_State$initialState = F2(
+var _user$project$Main$viewProductsPage = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _user$project$Main$viewNavigation,
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$initialState = F2(
 	function (initSocket, route) {
 		return {
 			input: '',
@@ -16090,7 +16135,26 @@ var _user$project$Main_State$initialState = F2(
 			route: route
 		};
 	});
-var _user$project$Main_State$init = function (location) {
+var _user$project$Main$State = F4(
+	function (a, b, c, d) {
+		return {route: a, input: b, messages: c, phxSocket: d};
+	});
+var _user$project$Main$OnLocationChange = function (a) {
+	return {ctor: 'OnLocationChange', _0: a};
+};
+var _user$project$Main$HandleSendError = function (a) {
+	return {ctor: 'HandleSendError', _0: a};
+};
+var _user$project$Main$ReceiveMessage = function (a) {
+	return {ctor: 'ReceiveMessage', _0: a};
+};
+var _user$project$Main$PhoenixMsg = function (a) {
+	return {ctor: 'PhoenixMsg', _0: a};
+};
+var _user$project$Main$subscriptions = function (state) {
+	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, state.phxSocket, _user$project$Main$PhoenixMsg);
+};
+var _user$project$Main$init = function (location) {
 	var channel = _fbonetti$elm_phoenix_socket$Phoenix_Channel$init('room:lobby');
 	var _p0 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
@@ -16099,7 +16163,7 @@ var _user$project$Main_State$init = function (location) {
 			_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
 			'shout',
 			'room:lobby',
-			_user$project$Main_Actions$ReceiveMessage,
+			_user$project$Main$ReceiveMessage,
 			_fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
 				_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket'))));
 	var initSocket = _p0._0;
@@ -16107,21 +16171,16 @@ var _user$project$Main_State$init = function (location) {
 	var currentRoute = _user$project$Routing$parseLocation(location);
 	return {
 		ctor: '_Tuple2',
-		_0: A2(_user$project$Main_State$initialState, initSocket, currentRoute),
-		_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main_Actions$PhoenixMsg, phxCmd)
+		_0: A2(_user$project$Main$initialState, initSocket, currentRoute),
+		_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
 	};
 };
-var _user$project$Main_State$State = F4(
-	function (a, b, c, d) {
-		return {route: a, input: b, messages: c, phxSocket: d};
-	});
-
-var _user$project$Main_Update$update = F2(
+var _user$project$Main$update = F2(
 	function (action, state) {
-		var _p0 = action;
-		switch (_p0.ctor) {
+		var _p1 = action;
+		switch (_p1.ctor) {
 			case 'OnLocationChange':
-				var newRoute = _user$project$Routing$parseLocation(_p0._0);
+				var newRoute = _user$project$Routing$parseLocation(_p1._0);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -16134,7 +16193,7 @@ var _user$project$Main_Update$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						state,
-						{input: _p0._0}),
+						{input: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewMessage':
@@ -16143,20 +16202,20 @@ var _user$project$Main_Update$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						state,
 						{
-							messages: {ctor: '::', _0: _p0._0, _1: state.messages}
+							messages: {ctor: '::', _0: _p1._0, _1: state.messages}
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'PhoenixMsg':
-				var _p1 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p0._0, state.phxSocket);
-				var phxSocket = _p1._0;
-				var phxCmd = _p1._1;
+				var _p2 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p1._0, state.phxSocket);
+				var phxSocket = _p2._0;
+				var phxCmd = _p2._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						state,
 						{phxSocket: phxSocket}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main_Actions$PhoenixMsg, phxCmd)
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
 				};
 			case 'SendMessage':
 				var payload = _elm_lang$core$Json_Encode$object(
@@ -16171,23 +16230,23 @@ var _user$project$Main_Update$update = F2(
 					});
 				var phxPush = A2(
 					_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
-					_user$project$Main_Actions$HandleSendError,
+					_user$project$Main$HandleSendError,
 					A2(
 						_fbonetti$elm_phoenix_socket$Phoenix_Push$onOk,
-						_user$project$Main_Actions$ReceiveMessage,
+						_user$project$Main$ReceiveMessage,
 						A2(
 							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
 							payload,
 							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'shout', 'room:lobby'))));
-				var _p2 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, phxPush, state.phxSocket);
-				var phxSocket = _p2._0;
-				var phxCmd = _p2._1;
+				var _p3 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, phxPush, state.phxSocket);
+				var phxSocket = _p3._0;
+				var phxCmd = _p3._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						state,
 						{phxSocket: phxSocket}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main_Actions$PhoenixMsg, phxCmd)
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
 				};
 			case 'ReceiveMessage':
 				var messageDecoder = A2(
@@ -16198,15 +16257,15 @@ var _user$project$Main_Update$update = F2(
 						_1: {ctor: '[]'}
 					},
 					_elm_lang$core$Json_Decode$string);
-				var somePayload = A2(_elm_lang$core$Json_Decode$decodeValue, messageDecoder, _p0._0);
-				var _p3 = somePayload;
-				if (_p3.ctor === 'Ok') {
+				var somePayload = A2(_elm_lang$core$Json_Decode$decodeValue, messageDecoder, _p1._0);
+				var _p4 = somePayload;
+				if (_p4.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							state,
 							{
-								messages: {ctor: '::', _0: _p3._0, _1: state.messages}
+								messages: {ctor: '::', _0: _p4._0, _1: state.messages}
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
@@ -16234,53 +16293,14 @@ var _user$project$Main_Update$update = F2(
 				};
 		}
 	});
-
-var _user$project$Main_Views_Navigation$linkView = function (link) {
-	return A2(
-		_elm_lang$html$Html$a,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$href(
-				A2(_elm_lang$core$Basics_ops['++'], '#', link)),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_user$project$Helpers_ViewHelper$toCapital(link),
-					' ')),
-			_1: {ctor: '[]'}
-		});
+var _user$project$Main$NewMessage = function (a) {
+	return {ctor: 'NewMessage', _0: a};
 };
-var _user$project$Main_Views_Navigation$navigationView = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	A2(
-		_elm_lang$core$List$map,
-		_user$project$Main_Views_Navigation$linkView,
-		{
-			ctor: '::',
-			_0: 'home',
-			_1: {
-				ctor: '::',
-				_0: 'products',
-				_1: {ctor: '[]'}
-			}
-		}));
-
-var _user$project$Main_Views_Chat$messageView = function (msg) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(msg),
-			_1: {ctor: '[]'}
-		});
+var _user$project$Main$SendMessage = {ctor: 'SendMessage'};
+var _user$project$Main$Input = function (a) {
+	return {ctor: 'Input', _0: a};
 };
-var _user$project$Main_Views_Chat$chatView = function (state) {
+var _user$project$Main$viewChat = function (state) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -16289,14 +16309,14 @@ var _user$project$Main_Views_Chat$chatView = function (state) {
 			_0: A2(
 				_elm_lang$html$Html$div,
 				{ctor: '[]'},
-				A2(_elm_lang$core$List$map, _user$project$Main_Views_Chat$messageView, state.messages)),
+				A2(_elm_lang$core$List$map, _user$project$Main$viewMessage, state.messages)),
 			_1: {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$input,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onInput(_user$project$Main_Actions$Input),
+						_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$Input),
 						_1: {ctor: '[]'}
 					},
 					{ctor: '[]'}),
@@ -16306,7 +16326,7 @@ var _user$project$Main_Views_Chat$chatView = function (state) {
 						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main_Actions$SendMessage),
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SendMessage),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -16319,53 +16339,32 @@ var _user$project$Main_Views_Chat$chatView = function (state) {
 			}
 		});
 };
-
-var _user$project$Main_View$notFoundView = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Not found'),
-		_1: {ctor: '[]'}
-	});
-var _user$project$Main_View$productsPageView = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: _user$project$Main_Views_Navigation$navigationView,
-		_1: {
-			ctor: '::',
-			_0: _user$project$Components_Products_View$productsView,
-			_1: {ctor: '[]'}
-		}
-	});
-var _user$project$Main_View$homePageView = function (state) {
+var _user$project$Main$viewHomePage = function (state) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _user$project$Main_Views_Navigation$navigationView,
+			_0: _user$project$Main$viewNavigation,
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main_Views_Chat$chatView(state),
+				_0: _user$project$Main$viewChat(state),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Main_View$page = function (state) {
-	var _p0 = state.route;
-	switch (_p0.ctor) {
+var _user$project$Main$switchPage = function (state) {
+	var _p5 = state.route;
+	switch (_p5.ctor) {
 		case 'HomeRoute':
-			return _user$project$Main_View$homePageView(state);
+			return _user$project$Main$viewHomePage(state);
 		case 'ProductsRoute':
-			return _user$project$Main_View$productsPageView;
+			return _user$project$Main$viewProductsPage;
 		default:
-			return _user$project$Main_View$notFoundView;
+			return _user$project$Main$viewNotFound;
 	}
 };
-var _user$project$Main_View$view = function (state) {
+var _user$project$Main$view = function (state) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -16375,18 +16374,14 @@ var _user$project$Main_View$view = function (state) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Main_View$page(state),
+			_0: _user$project$Main$switchPage(state),
 			_1: {ctor: '[]'}
 		});
 };
-
-var _user$project$Main$subscriptions = function (state) {
-	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, state.phxSocket, _user$project$Main_Actions$PhoenixMsg);
-};
 var _user$project$Main$main = A2(
 	_elm_lang$navigation$Navigation$program,
-	_user$project$Main_Actions$OnLocationChange,
-	{init: _user$project$Main_State$init, view: _user$project$Main_View$view, update: _user$project$Main_Update$update, subscriptions: _user$project$Main$subscriptions})();
+	_user$project$Main$OnLocationChange,
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
