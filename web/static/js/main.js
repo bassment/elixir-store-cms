@@ -15926,83 +15926,7 @@ var _user$project$ProductsCss$css = function (_p0) {
 							_1: {ctor: '[]'}
 						}
 					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						F2(
-							function (x, y) {
-								return A2(_rtfeldman$elm_css$Css_ops['#'], x, y);
-							}),
-						_user$project$SharedStyles$ReactiveLogo,
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineBlock),
-							_1: {
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$marginLeft(
-									_rtfeldman$elm_css$Css$px(150)),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$marginRight(
-										_rtfeldman$elm_css$Css$px(80)),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
-										_1: {ctor: '[]'}
-									}
-								}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							F2(
-								function (x, y) {
-									return A2(_rtfeldman$elm_css$Css_ops['#'], x, y);
-								}),
-							_user$project$SharedStyles$BuyTickets,
-							{
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$padding(
-									_rtfeldman$elm_css$Css$px(16)),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$paddingLeft(
-										_rtfeldman$elm_css$Css$px(24)),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$paddingRight(
-											_rtfeldman$elm_css$Css$px(24)),
-										_1: {
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$marginLeft(
-												_rtfeldman$elm_css$Css$px(50)),
-											_1: {
-												ctor: '::',
-												_0: _rtfeldman$elm_css$Css$marginRight(_rtfeldman$elm_css$Css$auto),
-												_1: {
-													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$color(
-														A3(_rtfeldman$elm_css$Css$rgb, 255, 255, 255)),
-													_1: {
-														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$backgroundColor(
-															A3(_rtfeldman$elm_css$Css$rgb, 27, 217, 130)),
-														_1: {
-															ctor: '::',
-															_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
-															_1: {ctor: '[]'}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}
+				_1: {ctor: '[]'}
 			}
 		}
 	});
@@ -16034,32 +15958,64 @@ var _user$project$Products$_p0 = _user$project$SharedStyles$productsNamespace;
 var _user$project$Products$id = _user$project$Products$_p0.id;
 var _user$project$Products$class = _user$project$Products$_p0.$class;
 var _user$project$Products$classList = _user$project$Products$_p0.classList;
-var _user$project$Products$productsView = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _user$project$Products$class(
-			{
-				ctor: '::',
-				_0: 'container',
-				_1: {ctor: '[]'}
-			}),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Products'),
-		_1: {ctor: '[]'}
-	});
 var _user$project$Products$update = F2(
-	function (action, products) {
+	function (action, state) {
 		var _p1 = action;
-		return {ctor: '_Tuple2', _0: products, _1: _elm_lang$core$Platform_Cmd$none};
+		return {ctor: '_Tuple2', _0: state, _1: _elm_lang$core$Platform_Cmd$none};
 	});
-var _user$project$Products$Product = F4(
-	function (a, b, c, d) {
-		return {id: a, title: b, price: c, image: d};
+var _user$project$Products$subscriptions = function (state) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Products$Product = F3(
+	function (a, b, c) {
+		return {title: a, price: b, image: c};
 	});
+var _user$project$Products$products = {
+	ctor: '::',
+	_0: A3(_user$project$Products$Product, 'Cosy Table for a dinner', 120, 'image:sample'),
+	_1: {
+		ctor: '::',
+		_0: A3(_user$project$Products$Product, 'Toy sports car for babies', 200, 'image:sample'),
+		_1: {ctor: '[]'}
+	}
+};
+var _user$project$Products$initialState = {products: _user$project$Products$products};
+var _user$project$Products$view = function (state) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _user$project$Products$class(
+				{
+					ctor: '::',
+					_0: 'container',
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Products'),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Products$productsListView(_user$project$Products$products),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Products$main = _elm_lang$html$Html$program(
+	{
+		init: A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			_user$project$Products$initialState,
+			{ctor: '[]'}),
+		update: _user$project$Products$update,
+		view: _user$project$Products$view,
+		subscriptions: _user$project$Products$subscriptions
+	})();
+var _user$project$Products$State = function (a) {
+	return {products: a};
+};
 var _user$project$Products$NoOp = {ctor: 'NoOp'};
 
 var _user$project$Main$viewMessage = function (msg) {
@@ -16114,17 +16070,10 @@ var _user$project$Main$viewNotFound = A2(
 		_0: _elm_lang$html$Html$text('Not found'),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Main$viewProductsPage = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: _user$project$Main$viewNavigation,
-		_1: {ctor: '[]'}
-	});
 var _user$project$Main$initialState = F2(
 	function (initSocket, route) {
 		return {
+			productsState: _user$project$Products$initialState,
 			input: '',
 			messages: {
 				ctor: '::',
@@ -16135,9 +16084,9 @@ var _user$project$Main$initialState = F2(
 			route: route
 		};
 	});
-var _user$project$Main$State = F4(
-	function (a, b, c, d) {
-		return {route: a, input: b, messages: c, phxSocket: d};
+var _user$project$Main$State = F5(
+	function (a, b, c, d, e) {
+		return {productsState: a, route: b, input: c, messages: d, phxSocket: e};
 	});
 var _user$project$Main$OnLocationChange = function (a) {
 	return {ctor: 'OnLocationChange', _0: a};
@@ -16175,124 +16124,6 @@ var _user$project$Main$init = function (location) {
 		_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
 	};
 };
-var _user$project$Main$update = F2(
-	function (action, state) {
-		var _p1 = action;
-		switch (_p1.ctor) {
-			case 'OnLocationChange':
-				var newRoute = _user$project$Routing$parseLocation(_p1._0);
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						state,
-						{route: newRoute}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'Input':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						state,
-						{input: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'NewMessage':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						state,
-						{
-							messages: {ctor: '::', _0: _p1._0, _1: state.messages}
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'PhoenixMsg':
-				var _p2 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p1._0, state.phxSocket);
-				var phxSocket = _p2._0;
-				var phxCmd = _p2._1;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						state,
-						{phxSocket: phxSocket}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
-				};
-			case 'SendMessage':
-				var payload = _elm_lang$core$Json_Encode$object(
-					{
-						ctor: '::',
-						_0: {
-							ctor: '_Tuple2',
-							_0: 'message',
-							_1: _elm_lang$core$Json_Encode$string(state.input)
-						},
-						_1: {ctor: '[]'}
-					});
-				var phxPush = A2(
-					_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
-					_user$project$Main$HandleSendError,
-					A2(
-						_fbonetti$elm_phoenix_socket$Phoenix_Push$onOk,
-						_user$project$Main$ReceiveMessage,
-						A2(
-							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
-							payload,
-							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'shout', 'room:lobby'))));
-				var _p3 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, phxPush, state.phxSocket);
-				var phxSocket = _p3._0;
-				var phxCmd = _p3._1;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						state,
-						{phxSocket: phxSocket}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
-				};
-			case 'ReceiveMessage':
-				var messageDecoder = A2(
-					_elm_lang$core$Json_Decode$at,
-					{
-						ctor: '::',
-						_0: 'message',
-						_1: {ctor: '[]'}
-					},
-					_elm_lang$core$Json_Decode$string);
-				var somePayload = A2(_elm_lang$core$Json_Decode$decodeValue, messageDecoder, _p1._0);
-				var _p4 = somePayload;
-				if (_p4.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							state,
-							{
-								messages: {ctor: '::', _0: _p4._0, _1: state.messages}
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							state,
-							{
-								messages: {ctor: '::', _0: 'Failed to receive message', _1: state.messages}
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			default:
-				var message = 'Failed to Send Message';
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						state,
-						{
-							messages: {ctor: '::', _0: message, _1: state.messages}
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-		}
-	});
 var _user$project$Main$NewMessage = function (a) {
 	return {ctor: 'NewMessage', _0: a};
 };
@@ -16353,13 +16184,162 @@ var _user$project$Main$viewHomePage = function (state) {
 			}
 		});
 };
+var _user$project$Main$ProductsAction = function (a) {
+	return {ctor: 'ProductsAction', _0: a};
+};
+var _user$project$Main$update = F2(
+	function (action, state) {
+		var _p1 = action;
+		switch (_p1.ctor) {
+			case 'ProductsAction':
+				var _p2 = A2(_user$project$Products$update, _p1._0, state.productsState);
+				var updatedProductsState = _p2._0;
+				var productsCmd = _p2._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{productsState: updatedProductsState}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$ProductsAction, productsCmd)
+				};
+			case 'OnLocationChange':
+				var newRoute = _user$project$Routing$parseLocation(_p1._0);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{route: newRoute}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Input':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{input: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'NewMessage':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{
+							messages: {ctor: '::', _0: _p1._0, _1: state.messages}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'PhoenixMsg':
+				var _p3 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p1._0, state.phxSocket);
+				var phxSocket = _p3._0;
+				var phxCmd = _p3._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{phxSocket: phxSocket}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
+				};
+			case 'SendMessage':
+				var payload = _elm_lang$core$Json_Encode$object(
+					{
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'message',
+							_1: _elm_lang$core$Json_Encode$string(state.input)
+						},
+						_1: {ctor: '[]'}
+					});
+				var phxPush = A2(
+					_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+					_user$project$Main$HandleSendError,
+					A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onOk,
+						_user$project$Main$ReceiveMessage,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'shout', 'room:lobby'))));
+				var _p4 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, phxPush, state.phxSocket);
+				var phxSocket = _p4._0;
+				var phxCmd = _p4._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{phxSocket: phxSocket}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
+				};
+			case 'ReceiveMessage':
+				var messageDecoder = A2(
+					_elm_lang$core$Json_Decode$at,
+					{
+						ctor: '::',
+						_0: 'message',
+						_1: {ctor: '[]'}
+					},
+					_elm_lang$core$Json_Decode$string);
+				var somePayload = A2(_elm_lang$core$Json_Decode$decodeValue, messageDecoder, _p1._0);
+				var _p5 = somePayload;
+				if (_p5.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							state,
+							{
+								messages: {ctor: '::', _0: _p5._0, _1: state.messages}
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							state,
+							{
+								messages: {ctor: '::', _0: 'Failed to receive message', _1: state.messages}
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				var message = 'Failed to Send Message';
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						state,
+						{
+							messages: {ctor: '::', _0: message, _1: state.messages}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$Main$viewProductsPage = function (state) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$viewNavigation,
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$map,
+					_user$project$Main$ProductsAction,
+					_user$project$Products$view(state.productsState)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$Main$switchPage = function (state) {
-	var _p5 = state.route;
-	switch (_p5.ctor) {
+	var _p6 = state.route;
+	switch (_p6.ctor) {
 		case 'HomeRoute':
 			return _user$project$Main$viewHomePage(state);
 		case 'ProductsRoute':
-			return _user$project$Main$viewProductsPage;
+			return _user$project$Main$viewProductsPage(state);
 		default:
 			return _user$project$Main$viewNotFound;
 	}
