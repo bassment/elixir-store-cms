@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (Html, div, a, text, input, button)
+import Html exposing (..)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onInput, onClick)
 import Helpers.ViewHelper exposing (toCapital)
@@ -203,7 +203,7 @@ switchPage state =
 
 viewHomePage : State -> Html Action
 viewHomePage state =
-    div []
+    div [ class "clearfix" ]
         [ viewNavigation
         , viewChat state
         ]
@@ -211,7 +211,7 @@ viewHomePage state =
 
 viewProductsPage : State -> Html Action
 viewProductsPage state =
-    div []
+    div [ class "clearfix" ]
         [ viewNavigation
         , Html.map ProductsAction (Products.view state.productsState)
         ]

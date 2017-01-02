@@ -26,3 +26,4 @@ node_modules
 # Elm ignore
 web/elm/elm-stuff
 dist
+npm-debug.log
