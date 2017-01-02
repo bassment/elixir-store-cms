@@ -1,7 +1,5 @@
 module Products exposing (..)
 
-import ProductsCss exposing (..)
-import SharedStyles exposing (..)
 import Html exposing (..)
 import Html.CssHelpers exposing (..)
 import Html.Attributes exposing (..)
@@ -67,13 +65,9 @@ update action state =
 -- VIEW
 
 
-{ id, class, classList } =
-    productsNamespace
-
-
 view : State -> Html Action
 view state =
-    div [ class [ "container" ] ]
+    div [ class "container" ]
         [ text "Products"
         , productsListView products
         ]
