@@ -1,6 +1,5 @@
 module Routing exposing (..)
 
-import String
 import Navigation exposing (Location)
 import UrlParser exposing (..)
 

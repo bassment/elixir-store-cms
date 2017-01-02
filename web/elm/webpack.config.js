@@ -2,6 +2,8 @@ var path = require("path");
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+    devtool: 'eval-source-map',
+
     entry: {
         app: ['./src/index.js']
     },
@@ -25,9 +27,12 @@ module.exports = {
                     /elm-stuff/, /node_modules/
                 ],
                 loader: 'elm-hot!elm-webpack?verbose=true&warn=true&debug=true'
-            }, {
-                test: /\.(css|scss)$/,
-                loaders: ['style-loader', 'css-loader']
+            }, , {
+                test: /\.css$/,
+                loaders: [
+                    'style?sourceMap',
+                    'css?modules&importLoaders=1&localIdentName=[local]___[hash:base64:7]'
+                ]
             }, {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: 'url-loader?limit=10000&mimetype=application/font-woff'

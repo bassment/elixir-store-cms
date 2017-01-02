@@ -12,6 +12,7 @@ import Navigation exposing (Location)
 import Json.Encode as JsEncode
 import Json.Decode as JsDecode exposing (decodeString, decodeValue, at)
 import Components.Products as Products
+import Helpers.Class as Class
 
 
 -- ENTRY POINT
@@ -33,7 +34,11 @@ main =
 
 subscriptions : State -> Sub Action
 subscriptions state =
-    Phoenix.Socket.listen state.phxSocket PhoenixMsg
+    Sub.batch
+        [ Phoenix.Socket.listen state.phxSocket PhoenixMsg
+        , Sub.map MainClasses Class.subscriptions
+        , Sub.map ProductsAction (Products.subscriptions state.productsState)
+        ]
 
 
 
@@ -46,22 +51,16 @@ type alias State =
     , input : String
     , messages : List String
     , phxSocket : Phoenix.Socket.Socket Action
-    }
-
-
-initialState : Phoenix.Socket.Socket Action -> Routing.Route -> State
-initialState initSocket route =
-    { productsState = Products.initialState
-    , input = ""
-    , messages = [ "Test message" ]
-    , phxSocket = initSocket
-    , route = route
+    , classes : Class.State
     }
 
 
 init : Location -> ( State, Cmd Action )
 init location =
     let
+        ( productsState, productsCmd ) =
+            Products.init
+
         currentRoute =
             Routing.parseLocation location
 
@@ -73,8 +72,17 @@ init location =
                 |> Phoenix.Socket.withDebug
                 |> Phoenix.Socket.on "shout" "room:lobby" ReceiveMessage
                 |> Phoenix.Socket.join channel
+
+        initialState =
+            State productsState currentRoute "" [ "Test message" ] initSocket Class.init
     in
-        ( initialState initSocket currentRoute, Cmd.map PhoenixMsg phxCmd )
+        ( initialState
+        , Cmd.batch
+            [ Cmd.map ProductsAction productsCmd
+            , Cmd.map PhoenixMsg phxCmd
+            , Class.fetchClasses "./Main.css"
+            ]
+        )
 
 
 
@@ -90,6 +98,7 @@ type Action
     | ReceiveMessage JsEncode.Value
     | HandleSendError JsEncode.Value
     | OnLocationChange Location
+    | MainClasses Class.Action
 
 
 update : Action -> State -> ( State, Cmd Action )
@@ -101,6 +110,13 @@ update action state =
                     Products.update subAction state.productsState
             in
                 ( { state | productsState = updatedProductsState }, Cmd.map ProductsAction productsCmd )
+
+        MainClasses subAction ->
+            let
+                ( classes, _ ) =
+                    Class.update subAction state.classes
+            in
+                ( { state | classes = classes }, Cmd.none )
 
         OnLocationChange location ->
             let
@@ -222,7 +238,11 @@ viewChat state =
     div []
         [ div [] (List.map viewMessage state.messages)
         , input [ onInput Input ] []
-        , button [ onClick SendMessage ] [ text "Send" ]
+        , button
+            [ class (Class.getClass "test" state.classes)
+            , onClick SendMessage
+            ]
+            [ text "Send" ]
         ]
 
 

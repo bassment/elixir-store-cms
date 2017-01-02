@@ -2,24 +2,23 @@ module Components.Products exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Helpers.Class as Class
 
 
 -- ENTRY POINT
-
-
-main : Program Never State Action
-main =
-    Html.program
-        { init = initialState ! []
-        , update = update
-        , view = view
-        , subscriptions = subscriptions
-        }
+-- main : Program Never ( State, Cmd Action ) Action
+-- main =
+--     Html.program
+--         { init = init ! []
+--         , update = update
+--         , view = view
+--         , subscriptions = subscriptions
+--         }
 
 
 subscriptions : State -> Sub Action
 subscriptions state =
-    Sub.none
+    Sub.map ProductsClasses Class.subscriptions
 
 
 
@@ -36,13 +35,17 @@ type alias Product =
 
 type alias State =
     { products : List Product
+    , classes : Class.State
     }
 
 
-initialState : State
-initialState =
-    { products = products
-    }
+init : ( State, Cmd Action )
+init =
+    ( State products Class.init
+    , Cmd.batch
+        [ Class.fetchClasses "./Products.css"
+        ]
+    )
 
 
 
@@ -51,11 +54,19 @@ initialState =
 
 type Action
     = NoOp
+    | ProductsClasses Class.Action
 
 
 update : Action -> State -> ( State, Cmd Action )
 update action state =
     case action of
+        ProductsClasses subAction ->
+            let
+                ( classes, _ ) =
+                    Class.update subAction state.classes
+            in
+                ( { state | classes = classes }, Cmd.none )
+
         NoOp ->
             ( state, Cmd.none )
 
@@ -66,7 +77,7 @@ update action state =
 
 view : State -> Html Action
 view state =
-    div [ class "container" ]
+    div [ class (Class.getClass "text" state.classes) ]
         [ text "Products"
         , productsListView products
         ]
