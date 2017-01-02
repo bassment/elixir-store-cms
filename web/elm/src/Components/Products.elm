@@ -1,7 +1,6 @@
-module Products exposing (..)
+module Components.Products exposing (..)
 
 import Html exposing (..)
-import Html.CssHelpers exposing (..)
 import Html.Attributes exposing (..)
 
 

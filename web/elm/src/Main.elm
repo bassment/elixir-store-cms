@@ -11,12 +11,13 @@ import Routing exposing (..)
 import Navigation exposing (Location)
 import Json.Encode as JsEncode
 import Json.Decode as JsDecode exposing (decodeString, decodeValue, at)
-import Products
+import Components.Products as Products
 
 
 -- ENTRY POINT
 
 
+main : Program Never State Action
 main =
     Navigation.program OnLocationChange
         { init = init

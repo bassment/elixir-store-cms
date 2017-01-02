@@ -1,12 +1,10 @@
 {
     "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/user/project.git",
+    "summary": "Store CMS",
+    "repository": "https://github.com/bassment/elixir-store-cms.git",
     "license": "BSD3",
     "source-directories": [
-        ".",
-        "./src",
-        "./src/Components"
+        "src"
     ],
     "exposed-modules": [],
     "dependencies": {
