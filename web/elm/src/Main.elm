@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, href)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Helpers.ViewHelper exposing (toCapital)
 import Phoenix.Socket
@@ -203,7 +203,7 @@ switchPage state =
 
 viewHomePage : State -> Html Action
 viewHomePage state =
-    div [ class "clearfix" ]
+    div []
         [ viewNavigation
         , viewChat state
         ]
@@ -211,7 +211,7 @@ viewHomePage state =
 
 viewProductsPage : State -> Html Action
 viewProductsPage state =
-    div [ class "clearfix" ]
+    div []
         [ viewNavigation
         , Html.map ProductsAction (Products.view state.productsState)
         ]
@@ -248,4 +248,6 @@ viewChat state =
 
 viewMessage : String -> Html Action
 viewMessage msg =
-    div [] [ text msg ]
+    div []
+        [ text msg
+        ]

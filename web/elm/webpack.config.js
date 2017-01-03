@@ -9,8 +9,9 @@ module.exports = {
     },
 
     output: {
-        path: path.resolve(__dirname + '/dist'),
-        filename: '[name].js'
+        path: path.resolve(__dirname + '/dist/'),
+        filename: '[name].js',
+        publicPath: '/'
     },
 
     resolve: {
@@ -29,7 +30,7 @@ module.exports = {
                 loader: 'elm-hot!elm-webpack?verbose=true&warn=true'
             }, {
                 test: /\.css$/,
-                loaders: ['style?sourceMap', 'css?modules&importLoaders=1&localIdentName=[local]___[hash:base64:7]']
+                loaders: ['style?sourceMap', 'css?modules&importLoaders=1&localIdentName=[name]-[local]_[hash:base64:5]']
             }, {
                 test: /\.(png|jpg)$/,
                 loader: 'url-loader?limit=8192'
