@@ -2,6 +2,7 @@ module Components.Products exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onInput, onClick)
 import Helpers.Class as Class
 
 
@@ -36,12 +37,13 @@ type alias Product =
 type alias State =
     { products : List Product
     , classes : Class.State
+    , input : String
     }
 
 
 init : ( State, Cmd Action )
 init =
-    ( State products Class.init
+    ( State products Class.init ""
     , Cmd.batch
         [ Class.fetchClasses "./Products.css"
         ]
@@ -53,11 +55,16 @@ init =
 
 
 type Action
-    = NoOp
-    | ProductsClasses Class.Action
+    = ProductsClasses Class.Action
+    | Input String
+    | SendMessage String
 
 
-update : Action -> State -> ( State, Cmd Action )
+type OutAction
+    = Message String
+
+
+update : Action -> State -> ( State, Cmd Action, Maybe OutAction )
 update action state =
     case action of
         ProductsClasses subAction ->
@@ -65,10 +72,13 @@ update action state =
                 ( classes, _ ) =
                     Class.update subAction state.classes
             in
-                ( { state | classes = classes }, Cmd.none )
+                ( { state | classes = classes }, Cmd.none, Nothing )
 
-        NoOp ->
-            ( state, Cmd.none )
+        Input newInput ->
+            ( { state | input = newInput }, Cmd.none, Nothing )
+
+        SendMessage input ->
+            ( { state | input = "" }, Cmd.none, Just <| Message input )
 
 
 
@@ -80,6 +90,7 @@ view state =
     div [ class (Class.getClass "text" state.classes) ]
         [ text "Products"
         , productsListView products
+        , viewChat state
         ]
 
 
@@ -92,6 +103,17 @@ productItemView : Product -> Html Action
 productItemView product =
     div []
         [ text (product.title ++ ": " ++ (toString product.price))
+        ]
+
+
+viewChat : State -> Html Action
+viewChat state =
+    div []
+        [ input [ value state.input, onInput Input ] []
+        , button
+            [ onClick ( SendMessage state.input )
+            ]
+            [ text "Send" ]
         ]
 
 

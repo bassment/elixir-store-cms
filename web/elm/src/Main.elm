@@ -11,8 +11,10 @@ import Routing exposing (..)
 import Navigation exposing (Location)
 import Json.Encode as JsEncode
 import Json.Decode as JsDecode exposing (decodeString, decodeValue, at)
-import Components.Products as Products
+import Components.Products as Products exposing (OutAction(..))
 import Helpers.Class as Class
+import OutMessage
+
 
 
 -- ENTRY POINT
@@ -92,7 +94,7 @@ init location =
 type Action
     = ProductsAction Products.Action
     | Input String
-    | SendMessage
+    | SendMessage String
     | NewMessage String
     | PhoenixMsg (Phoenix.Socket.Msg Action)
     | ReceiveMessage JsEncode.Value
@@ -105,11 +107,14 @@ update : Action -> State -> ( State, Cmd Action )
 update action state =
     case action of
         ProductsAction subAction ->
-            let
-                ( updatedProductsState, productsCmd ) =
+            -- let
+                -- ( updatedProductsState, productsCmd ) =
                     Products.update subAction state.productsState
-            in
-                ( { state | productsState = updatedProductsState }, Cmd.map ProductsAction productsCmd )
+                        |> OutMessage.mapComponent (\updatedProductsState -> { state | productsState = updatedProductsState })
+                        |> OutMessage.mapCmd ProductsAction
+                        |> OutMessage.evaluateMaybe interpretOutMsg Cmd.none
+            -- in
+                -- ( { state | productsState = updatedProductsState }, Cmd.map ProductsAction productsCmd )
 
         MainClasses subAction ->
             let
@@ -138,11 +143,11 @@ update action state =
             in
                 ( { state | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd )
 
-        SendMessage ->
+        SendMessage input ->
             let
                 payload =
                     JsEncode.object
-                        [ ( "message", JsEncode.string state.input )
+                        [ ( "message", JsEncode.string input )
                         ]
 
                 phxPush =
@@ -177,6 +182,13 @@ update action state =
                     "Failed to Send Message"
             in
                 ( { state | messages = message :: state.messages }, Cmd.none )
+
+
+interpretOutMsg : Products.OutAction -> State -> ( State, Cmd Action )
+interpretOutMsg outAction state =
+    case outAction of
+        Message newInput ->
+            ( { state | input = newInput }, Cmd.none )
 
 
 
@@ -237,9 +249,9 @@ viewChat : State -> Html Action
 viewChat state =
     div []
         [ div [] (List.map viewMessage state.messages)
-        , input [ onInput Input ] []
+        , input [ value state.input, onInput Input ] []
         , button
-            [ onClick SendMessage
+            [ onClick ( SendMessage state.input )
             ]
             [ text "Send" ]
         ]
