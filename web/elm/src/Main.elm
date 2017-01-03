@@ -239,8 +239,7 @@ viewChat state =
         [ div [] (List.map viewMessage state.messages)
         , input [ onInput Input ] []
         , button
-            [ class (Class.getClass "test" state.classes)
-            , onClick SendMessage
+            [ onClick SendMessage
             ]
             [ text "Send" ]
         ]
