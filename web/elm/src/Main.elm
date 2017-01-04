@@ -11,16 +11,15 @@ import Routing exposing (..)
 import Navigation exposing (Location)
 import Json.Encode as JsEncode
 import Json.Decode as JsDecode exposing (decodeString, decodeValue, at)
-import Components.Products as Products exposing (OutAction(..))
+import Components.Products as Products exposing (OutMsg(..))
 import Helpers.Class as Class
 import OutMessage
-
 
 
 -- ENTRY POINT
 
 
-main : Program Never State Action
+main : Program Never Model Msg
 main =
     Navigation.program OnLocationChange
         { init = init
@@ -34,33 +33,33 @@ main =
 -- SUBSCRIPTIONS
 
 
-subscriptions : State -> Sub Action
-subscriptions state =
+subscriptions : Model -> Sub Msg
+subscriptions model =
     Sub.batch
-        [ Phoenix.Socket.listen state.phxSocket PhoenixMsg
+        [ Phoenix.Socket.listen model.phxSocket PhoenixMsg
         , Sub.map MainClasses Class.subscriptions
-        , Sub.map ProductsAction (Products.subscriptions state.productsState)
+        , Sub.map ProductsMsg (Products.subscriptions model.productsModel)
         ]
 
 
 
--- STATE
+-- MODEL
 
 
-type alias State =
-    { productsState : Products.State
+type alias Model =
+    { productsModel : Products.Model
     , route : Routing.Route
     , input : String
     , messages : List String
-    , phxSocket : Phoenix.Socket.Socket Action
-    , classes : Class.State
+    , phxSocket : Phoenix.Socket.Socket Msg
+    , classes : Class.Model
     }
 
 
-init : Location -> ( State, Cmd Action )
+init : Location -> ( Model, Cmd Msg )
 init location =
     let
-        ( productsState, productsCmd ) =
+        ( productsModel, productsCmd ) =
             Products.init
 
         currentRoute =
@@ -75,12 +74,12 @@ init location =
                 |> Phoenix.Socket.on "shout" "room:lobby" ReceiveMessage
                 |> Phoenix.Socket.join channel
 
-        initialState =
-            State productsState currentRoute "" [ "Test message" ] initSocket Class.init
+        initialModel =
+            Model productsModel currentRoute "" [ "Test message" ] initSocket Class.init
     in
-        ( initialState
+        ( initialModel
         , Cmd.batch
-            [ Cmd.map ProductsAction productsCmd
+            [ Cmd.map ProductsMsg productsCmd
             , Cmd.map PhoenixMsg phxCmd
             , Class.fetchClasses "./Main.css"
             ]
@@ -88,60 +87,56 @@ init location =
 
 
 
--- ACTIONS AND UPDATE
+-- MESSAGES AND UPDATE
 
 
-type Action
-    = ProductsAction Products.Action
+type Msg
+    = ProductsMsg Products.Msg
     | Input String
     | SendMessage String
     | NewMessage String
-    | PhoenixMsg (Phoenix.Socket.Msg Action)
+    | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | ReceiveMessage JsEncode.Value
     | HandleSendError JsEncode.Value
     | OnLocationChange Location
-    | MainClasses Class.Action
+    | MainClasses Class.Msg
 
 
-update : Action -> State -> ( State, Cmd Action )
-update action state =
-    case action of
-        ProductsAction subAction ->
-            -- let
-                -- ( updatedProductsState, productsCmd ) =
-                    Products.update subAction state.productsState
-                        |> OutMessage.mapComponent (\updatedProductsState -> { state | productsState = updatedProductsState })
-                        |> OutMessage.mapCmd ProductsAction
-                        |> OutMessage.evaluateMaybe interpretOutMsg Cmd.none
-            -- in
-                -- ( { state | productsState = updatedProductsState }, Cmd.map ProductsAction productsCmd )
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        ProductsMsg subMsg ->
+            Products.update subMsg model.productsModel
+                |> OutMessage.mapComponent (\updatedModel -> { model | productsModel = updatedModel })
+                |> OutMessage.mapCmd ProductsMsg
+                |> OutMessage.evaluateMaybe interpretOutMsg Cmd.none
 
-        MainClasses subAction ->
+        MainClasses subMsg ->
             let
                 ( classes, _ ) =
-                    Class.update subAction state.classes
+                    Class.update subMsg model.classes
             in
-                ( { state | classes = classes }, Cmd.none )
+                ( { model | classes = classes }, Cmd.none )
 
         OnLocationChange location ->
             let
                 newRoute =
                     parseLocation location
             in
-                ( { state | route = newRoute }, Cmd.none )
+                ( { model | route = newRoute }, Cmd.none )
 
         Input newInput ->
-            ( { state | input = newInput }, Cmd.none )
+            ( { model | input = newInput }, Cmd.none )
 
         NewMessage str ->
-            ( { state | messages = (str :: state.messages) }, Cmd.none )
+            ( { model | messages = (str :: model.messages) }, Cmd.none )
 
-        PhoenixMsg action ->
+        PhoenixMsg msg ->
             let
                 ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update action state.phxSocket
+                    Phoenix.Socket.update msg model.phxSocket
             in
-                ( { state | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd )
+                ( { model | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd )
 
         SendMessage input ->
             let
@@ -157,9 +152,9 @@ update action state =
                         |> Phoenix.Push.onError HandleSendError
 
                 ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.push phxPush state.phxSocket
+                    Phoenix.Socket.push phxPush model.phxSocket
             in
-                ( { state | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd )
+                ( { model | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd )
 
         ReceiveMessage raw ->
             let
@@ -171,93 +166,93 @@ update action state =
             in
                 case somePayload of
                     Ok payload ->
-                        ( { state | messages = payload :: state.messages }, Cmd.none )
+                        ( { model | messages = payload :: model.messages }, Cmd.none )
 
                     Err error ->
-                        ( { state | messages = "Failed to receive message" :: state.messages }, Cmd.none )
+                        ( { model | messages = "Failed to receive message" :: model.messages }, Cmd.none )
 
         HandleSendError _ ->
             let
                 message =
                     "Failed to Send Message"
             in
-                ( { state | messages = message :: state.messages }, Cmd.none )
+                ( { model | messages = message :: model.messages }, Cmd.none )
 
 
-interpretOutMsg : Products.OutAction -> State -> ( State, Cmd Action )
-interpretOutMsg outAction state =
-    case outAction of
-        Message newInput ->
-            ( { state | input = newInput }, Cmd.none )
+interpretOutMsg : Products.OutMsg -> Model -> ( Model, Cmd Msg )
+interpretOutMsg outMsg model =
+    case outMsg of
+        ParentSendMessage newInput ->
+            update (SendMessage newInput) model
 
 
 
 -- VIEW
 
 
-view : State -> Html Action
-view state =
-    div [ class "elm-app" ] [ switchPage state ]
+view : Model -> Html Msg
+view model =
+    div [ class "elm-app" ] [ switchPage model ]
 
 
-switchPage : State -> Html Action
-switchPage state =
-    case state.route of
+switchPage : Model -> Html Msg
+switchPage model =
+    case model.route of
         HomeRoute ->
-            viewHomePage state
+            viewHomePage model
 
         ProductsRoute ->
-            viewProductsPage state
+            viewProductsPage model
 
         NotFoundRoute ->
             viewNotFound
 
 
-viewHomePage : State -> Html Action
-viewHomePage state =
+viewHomePage : Model -> Html Msg
+viewHomePage model =
     div []
         [ viewNavigation
-        , viewChat state
+        , viewChat model
         ]
 
 
-viewProductsPage : State -> Html Action
-viewProductsPage state =
+viewProductsPage : Model -> Html Msg
+viewProductsPage model =
     div []
         [ viewNavigation
-        , Html.map ProductsAction (Products.view state.productsState)
+        , Html.map ProductsMsg (Products.view model.productsModel)
         ]
 
 
-viewNotFound : Html Action
+viewNotFound : Html Msg
 viewNotFound =
     div []
         [ text "Not found" ]
 
 
-viewNavigation : Html Action
+viewNavigation : Html Msg
 viewNavigation =
     div [] (List.map viewLink [ "home", "products" ])
 
 
-viewLink : String -> Html Action
+viewLink : String -> Html Msg
 viewLink link =
     a [ href ("#" ++ link) ] [ text (toCapital link ++ " ") ]
 
 
-viewChat : State -> Html Action
-viewChat state =
+viewChat : Model -> Html Msg
+viewChat model =
     div []
-        [ div [] (List.map viewMessage state.messages)
-        , input [ value state.input, onInput Input ] []
+        [ div [] (List.map viewMessage model.messages)
+        , input [ value model.input, onInput Input ] []
         , button
-            [ onClick ( SendMessage state.input )
+            [ onClick (SendMessage model.input)
             ]
             [ text "Send" ]
         ]
 
 
-viewMessage : String -> Html Action
+viewMessage : String -> Html Msg
 viewMessage msg =
     div []
         [ text msg

@@ -7,7 +7,7 @@ import Helpers.Class as Class
 
 
 -- ENTRY POINT
--- main : Program Never ( State, Cmd Action ) Action
+-- main : Program Never ( Model, Cmd Msg ) Msg
 -- main =
 --     Html.program
 --         { init = init ! []
@@ -17,13 +17,13 @@ import Helpers.Class as Class
 --         }
 
 
-subscriptions : State -> Sub Action
-subscriptions state =
+subscriptions : Model -> Sub Msg
+subscriptions model =
     Sub.map ProductsClasses Class.subscriptions
 
 
 
--- STATE
+-- MODEL
 -- type alias ProductId = Int
 
 
@@ -34,16 +34,16 @@ type alias Product =
     }
 
 
-type alias State =
+type alias Model =
     { products : List Product
-    , classes : Class.State
+    , classes : Class.Model
     , input : String
     }
 
 
-init : ( State, Cmd Action )
+init : ( Model, Cmd Msg )
 init =
-    ( State products Class.init ""
+    ( Model products Class.init ""
     , Cmd.batch
         [ Class.fetchClasses "./Products.css"
         ]
@@ -51,67 +51,67 @@ init =
 
 
 
--- ACTIONS AND UPDATE
+-- MESSAGES AND UPDATE
 
 
-type Action
-    = ProductsClasses Class.Action
+type Msg
+    = ProductsClasses Class.Msg
     | Input String
-    | SendMessage String
+    | SocketMessage String
 
 
-type OutAction
-    = Message String
+type OutMsg
+    = ParentSendMessage String
 
 
-update : Action -> State -> ( State, Cmd Action, Maybe OutAction )
-update action state =
-    case action of
-        ProductsClasses subAction ->
+update : Msg -> Model -> ( Model, Cmd Msg, Maybe OutMsg )
+update msg model =
+    case msg of
+        ProductsClasses subMsg ->
             let
                 ( classes, _ ) =
-                    Class.update subAction state.classes
+                    Class.update subMsg model.classes
             in
-                ( { state | classes = classes }, Cmd.none, Nothing )
+                ( { model | classes = classes }, Cmd.none, Nothing )
 
         Input newInput ->
-            ( { state | input = newInput }, Cmd.none, Nothing )
+            ( { model | input = newInput }, Cmd.none, Nothing )
 
-        SendMessage input ->
-            ( { state | input = "" }, Cmd.none, Just <| Message input )
+        SocketMessage input ->
+            ( { model | input = "" }, Cmd.none, Just <| ParentSendMessage input )
 
 
 
 -- VIEW
 
 
-view : State -> Html Action
-view state =
-    div [ class (Class.getClass "text" state.classes) ]
+view : Model -> Html Msg
+view model =
+    div [ class (Class.getClass "text" model.classes) ]
         [ text "Products"
         , productsListView products
-        , viewChat state
+        , viewChat model
         ]
 
 
-productsListView : List Product -> Html Action
+productsListView : List Product -> Html Msg
 productsListView products =
     div [] (List.map productItemView products)
 
 
-productItemView : Product -> Html Action
+productItemView : Product -> Html Msg
 productItemView product =
     div []
         [ text (product.title ++ ": " ++ (toString product.price))
         ]
 
 
-viewChat : State -> Html Action
-viewChat state =
+viewChat : Model -> Html Msg
+viewChat model =
     div []
-        [ input [ value state.input, onInput Input ] []
+        [ input [ value model.input, onInput Input ] []
         , button
-            [ onClick ( SendMessage state.input )
+            [ onClick ( SocketMessage model.input )
             ]
             [ text "Send" ]
         ]
