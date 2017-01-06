@@ -4,6 +4,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Helpers.Class as Class
+import Phoenix.Socket
+import Phoenix.Channel
+import Json.Encode as JsEncode
+import Json.Decode as JsDecode exposing (decodeString, decodeValue, at)
 
 
 -- ENTRY POINT
@@ -19,7 +23,11 @@ import Helpers.Class as Class
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.map ProductsClasses Class.subscriptions
+    Sub.batch
+        [ Phoenix.Socket.listen model.phxSocket PhoenixMsg
+        , Sub.map ProductsClasses Class.subscriptions
+        ]
+
 
 
 
@@ -35,7 +43,8 @@ type alias Product =
 
 
 type alias Model =
-    { products : List Product
+    { phxSocket : Phoenix.Socket.Socket Msg
+    , products : List Product
     , classes : Class.Model
     , input : String
     }
@@ -43,11 +52,23 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model products Class.init ""
-    , Cmd.batch
-        [ Class.fetchClasses "./Products.css"
-        ]
-    )
+    let
+        channel =
+            Phoenix.Channel.init "store:products"
+
+        ( initSocket, phxCmd ) =
+            Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
+                |> Phoenix.Socket.withoutHeartbeat
+                |> Phoenix.Socket.on "allProducts" "store:products" AskProducts
+                |> Phoenix.Socket.join channel
+    in
+        ( Model initSocket products Class.init ""
+        , Cmd.batch
+            [ Cmd.map PhoenixMsg phxCmd
+            , Class.fetchClasses "./Products.css"
+            ]
+        )
+
 
 
 
@@ -58,6 +79,8 @@ type Msg
     = ProductsClasses Class.Msg
     | Input String
     | SocketMessage String
+    | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    | AskProducts JsEncode.Value
 
 
 type OutMsg
@@ -67,6 +90,13 @@ type OutMsg
 update : Msg -> Model -> ( Model, Cmd Msg, Maybe OutMsg )
 update msg model =
     case msg of
+        PhoenixMsg msg ->
+            let
+                ( phxSocket, phxCmd ) =
+                    Phoenix.Socket.update msg model.phxSocket
+            in
+                ( { model | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd, Nothing )
+
         ProductsClasses subMsg ->
             let
                 ( classes, _ ) =
@@ -79,6 +109,9 @@ update msg model =
 
         SocketMessage input ->
             ( { model | input = "" }, Cmd.none, Just <| ParentSendMessage input )
+
+        AskProducts raw ->
+            ( model, Cmd.none, Nothing )
 
 
 

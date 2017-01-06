@@ -5,8 +5,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Helpers.ViewHelper exposing (toCapital)
 import Phoenix.Socket
-import Phoenix.Push
 import Phoenix.Channel
+import Phoenix.Push
 import Routing exposing (..)
 import Navigation exposing (Location)
 import Json.Encode as JsEncode
@@ -66,12 +66,12 @@ init location =
             Routing.parseLocation location
 
         channel =
-            Phoenix.Channel.init "room:lobby"
+            Phoenix.Channel.init "chat:message"
 
         ( initSocket, phxCmd ) =
             Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
-                |> Phoenix.Socket.withDebug
-                |> Phoenix.Socket.on "shout" "room:lobby" ReceiveMessage
+                |> Phoenix.Socket.withoutHeartbeat
+                |> Phoenix.Socket.on "sendMessage" "chat:message" ReceiveMessage
                 |> Phoenix.Socket.join channel
 
         initialModel =
@@ -146,7 +146,7 @@ update msg model =
                         ]
 
                 phxPush =
-                    Phoenix.Push.init "shout" "room:lobby"
+                    Phoenix.Push.init "sendMessage" "chat:message"
                         |> Phoenix.Push.withPayload payload
                         |> Phoenix.Push.onOk ReceiveMessage
                         |> Phoenix.Push.onError HandleSendError

@@ -2,7 +2,8 @@ defmodule BabyStore.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "room:lobby", BabyStore.RoomChannel
+  channel "store:products", BabyStore.StoreChannel
+  channel "chat:message", BabyStore.ChatChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
