@@ -3,7 +3,6 @@ defmodule BabyStore.UserSocket do
 
   ## Channels
   channel "store:products", BabyStore.StoreChannel
-  channel "chat:message", BabyStore.ChatChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

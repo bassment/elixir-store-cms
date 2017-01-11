@@ -30,7 +30,6 @@ subscriptions model =
 
 
 
-
 -- MODEL
 -- type alias ProductId = Int
 
@@ -44,7 +43,7 @@ type alias Product =
 
 type alias Model =
     { phxSocket : Phoenix.Socket.Socket Msg
-    , products : List Product
+    , products : List String
     , classes : Class.Model
     , input : String
     }
@@ -55,20 +54,20 @@ init =
     let
         channel =
             Phoenix.Channel.init "store:products"
+                |> Phoenix.Channel.onJoin ReceiveProducts
 
         ( initSocket, phxCmd ) =
             Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
                 |> Phoenix.Socket.withoutHeartbeat
-                |> Phoenix.Socket.on "allProducts" "store:products" AskProducts
+                |> Phoenix.Socket.on "allProducts" "store:products" ReceiveProducts
                 |> Phoenix.Socket.join channel
     in
-        ( Model initSocket products Class.init ""
+        ( Model initSocket [] Class.init ""
         , Cmd.batch
-            [ Cmd.map PhoenixMsg phxCmd
-            , Class.fetchClasses "./Products.css"
+            [ Class.fetchClasses "./Products.css"
+            , Cmd.map PhoenixMsg phxCmd
             ]
         )
-
 
 
 
@@ -80,11 +79,12 @@ type Msg
     | Input String
     | SocketMessage String
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
-    | AskProducts JsEncode.Value
+    | ReceiveProducts JsEncode.Value
+    | HandleSendError JsEncode.Value
 
 
 type OutMsg
-    = ParentSendMessage String
+    = SendMessage String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg, Maybe OutMsg )
@@ -108,10 +108,29 @@ update msg model =
             ( { model | input = newInput }, Cmd.none, Nothing )
 
         SocketMessage input ->
-            ( { model | input = "" }, Cmd.none, Just <| ParentSendMessage input )
+            ( { model | input = "" }, Cmd.none, Just <| SendMessage input )
 
-        AskProducts raw ->
-            ( model, Cmd.none, Nothing )
+        ReceiveProducts raw ->
+            let
+                messageDecoder =
+                    at [ "products" ] JsDecode.string
+
+                somePayload =
+                    JsDecode.decodeValue messageDecoder raw
+            in
+                case somePayload of
+                    Ok payload ->
+                        ( { model | products = payload :: model.products }, Cmd.none, Nothing )
+
+                    Err error ->
+                        ( model, Cmd.none, Nothing )
+
+        HandleSendError _ ->
+            let
+                message =
+                    "Failed to Send Message"
+            in
+                ( model, Cmd.none, Nothing )
 
 
 
@@ -122,20 +141,20 @@ view : Model -> Html Msg
 view model =
     div [ class (Class.getClass "text" model.classes) ]
         [ text "Products"
-        , productsListView products
+        , productsListView model.products
         , viewChat model
         ]
 
 
-productsListView : List Product -> Html Msg
+productsListView : List String -> Html Msg
 productsListView products =
     div [] (List.map productItemView products)
 
 
-productItemView : Product -> Html Msg
+productItemView : String -> Html Msg
 productItemView product =
     div []
-        [ text (product.title ++ ": " ++ (toString product.price))
+        [ text (product)
         ]
 
 
@@ -144,18 +163,7 @@ viewChat model =
     div []
         [ input [ value model.input, onInput Input ] []
         , button
-            [ onClick ( SocketMessage model.input )
+            [ onClick (SocketMessage model.input)
             ]
             [ text "Send" ]
         ]
-
-
-
--- PRODUCTS
-
-
-products : List Product
-products =
-    [ Product "Cosy Table for a dinner" 120 "image:sample"
-    , Product "Toy sports car for babies" 200 "image:sample"
-    ]

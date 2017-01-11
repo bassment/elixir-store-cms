@@ -3,7 +3,7 @@ defmodule BabyStore.StoreChannel do
 
   def join("store:products", payload, socket) do
     if authorized?(payload) do
-      {:ok, socket}
+      {:ok, %{products: "Render products here"}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
@@ -11,8 +11,8 @@ defmodule BabyStore.StoreChannel do
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
-  def handle_in("allProducts", payload, socket) do
-    {:reply, {:ok, payload}, socket}
+  def handle_in("allProducts", _, socket) do
+    {:reply, {:ok, %{products: "A lot of products here!"}}, socket}
   end
 
   # It is also common to receive messages from the client and

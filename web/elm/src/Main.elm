@@ -36,8 +36,7 @@ main =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Phoenix.Socket.listen model.phxSocket PhoenixMsg
-        , Sub.map MainClasses Class.subscriptions
+        [ Sub.map MainClasses Class.subscriptions
         , Sub.map ProductsMsg (Products.subscriptions model.productsModel)
         ]
 
@@ -48,11 +47,8 @@ subscriptions model =
 
 type alias Model =
     { productsModel : Products.Model
-    , route : Routing.Route
-    , input : String
-    , messages : List String
-    , phxSocket : Phoenix.Socket.Socket Msg
     , classes : Class.Model
+    , route : Routing.Route
     }
 
 
@@ -65,22 +61,12 @@ init location =
         currentRoute =
             Routing.parseLocation location
 
-        channel =
-            Phoenix.Channel.init "chat:message"
-
-        ( initSocket, phxCmd ) =
-            Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
-                |> Phoenix.Socket.withoutHeartbeat
-                |> Phoenix.Socket.on "sendMessage" "chat:message" ReceiveMessage
-                |> Phoenix.Socket.join channel
-
         initialModel =
-            Model productsModel currentRoute "" [ "Test message" ] initSocket Class.init
+            Model productsModel Class.init currentRoute
     in
         ( initialModel
         , Cmd.batch
             [ Cmd.map ProductsMsg productsCmd
-            , Cmd.map PhoenixMsg phxCmd
             , Class.fetchClasses "./Main.css"
             ]
         )
@@ -92,14 +78,8 @@ init location =
 
 type Msg
     = ProductsMsg Products.Msg
-    | Input String
-    | SendMessage String
-    | NewMessage String
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
-    | ReceiveMessage JsEncode.Value
-    | HandleSendError JsEncode.Value
-    | OnLocationChange Location
     | MainClasses Class.Msg
+    | OnLocationChange Location
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -125,65 +105,12 @@ update msg model =
             in
                 ( { model | route = newRoute }, Cmd.none )
 
-        Input newInput ->
-            ( { model | input = newInput }, Cmd.none )
-
-        NewMessage str ->
-            ( { model | messages = (str :: model.messages) }, Cmd.none )
-
-        PhoenixMsg msg ->
-            let
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg model.phxSocket
-            in
-                ( { model | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd )
-
-        SendMessage input ->
-            let
-                payload =
-                    JsEncode.object
-                        [ ( "message", JsEncode.string input )
-                        ]
-
-                phxPush =
-                    Phoenix.Push.init "sendMessage" "chat:message"
-                        |> Phoenix.Push.withPayload payload
-                        |> Phoenix.Push.onOk ReceiveMessage
-                        |> Phoenix.Push.onError HandleSendError
-
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.push phxPush model.phxSocket
-            in
-                ( { model | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd )
-
-        ReceiveMessage raw ->
-            let
-                messageDecoder =
-                    at [ "message" ] JsDecode.string
-
-                somePayload =
-                    JsDecode.decodeValue messageDecoder raw
-            in
-                case somePayload of
-                    Ok payload ->
-                        ( { model | messages = payload :: model.messages }, Cmd.none )
-
-                    Err error ->
-                        ( { model | messages = "Failed to receive message" :: model.messages }, Cmd.none )
-
-        HandleSendError _ ->
-            let
-                message =
-                    "Failed to Send Message"
-            in
-                ( { model | messages = message :: model.messages }, Cmd.none )
-
 
 interpretOutMsg : Products.OutMsg -> Model -> ( Model, Cmd Msg )
 interpretOutMsg outMsg model =
     case outMsg of
-        ParentSendMessage newInput ->
-            update (SendMessage newInput) model
+        SendMessage newInput ->
+            ( model, Cmd.none )
 
 
 
@@ -201,23 +128,12 @@ switchPage model =
         HomeRoute ->
             viewHomePage model
 
-        ProductsRoute ->
-            viewProductsPage model
-
         NotFoundRoute ->
             viewNotFound
 
 
 viewHomePage : Model -> Html Msg
 viewHomePage model =
-    div []
-        [ viewNavigation
-        , viewChat model
-        ]
-
-
-viewProductsPage : Model -> Html Msg
-viewProductsPage model =
     div []
         [ viewNavigation
         , Html.map ProductsMsg (Products.view model.productsModel)
@@ -238,22 +154,3 @@ viewNavigation =
 viewLink : String -> Html Msg
 viewLink link =
     a [ href ("#" ++ link) ] [ text (toCapital link ++ " ") ]
-
-
-viewChat : Model -> Html Msg
-viewChat model =
-    div []
-        [ div [] (List.map viewMessage model.messages)
-        , input [ value model.input, onInput Input ] []
-        , button
-            [ onClick (SendMessage model.input)
-            ]
-            [ text "Send" ]
-        ]
-
-
-viewMessage : String -> Html Msg
-viewMessage msg =
-    div []
-        [ text msg
-        ]
