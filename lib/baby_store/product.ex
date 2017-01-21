@@ -1,6 +1,7 @@
 defmodule BabyStore.Product do
   use Ecto.Schema
 
+  @derive {Poison.Encoder, only: [:title, :price, :image]}
   schema "products" do
     field :type,      :string
     field :category,  :string
