@@ -3,7 +3,12 @@ defmodule BabyStore.StoreChannel do
 
   def join("store:products", payload, socket) do
     if authorized?(payload) do
-      {:ok, %{products: "Render products here"}, socket}
+      products = [
+        %{title: "Product one", price: 100, image: "default" },
+        %{title: "Product two", price: 200, image: "default" },
+        %{title: "Product three", price: 350, image: "default" }
+      ]
+      {:ok, products, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end

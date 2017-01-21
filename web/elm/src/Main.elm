@@ -2,15 +2,9 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput, onClick)
 import Helpers.ViewHelper exposing (toCapital)
-import Phoenix.Socket
-import Phoenix.Channel
-import Phoenix.Push
 import Routing exposing (..)
 import Navigation exposing (Location)
-import Json.Encode as JsEncode
-import Json.Decode as JsDecode exposing (decodeString, decodeValue, at)
 import Components.Products as Products exposing (OutMsg(..))
 import Helpers.Class as Class
 import OutMessage

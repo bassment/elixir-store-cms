@@ -6,8 +6,8 @@ import Html.Events exposing (onInput, onClick)
 import Helpers.Class as Class
 import Phoenix.Socket
 import Phoenix.Channel
-import Json.Encode as JsEncode
-import Json.Decode as JsDecode exposing (decodeString, decodeValue, at)
+import Json.Encode as JE
+import Json.Decode as JD
 
 
 -- ENTRY POINT
@@ -43,7 +43,7 @@ type alias Product =
 
 type alias Model =
     { phxSocket : Phoenix.Socket.Socket Msg
-    , products : List String
+    , products : List Product
     , classes : Class.Model
     , input : String
     }
@@ -79,8 +79,8 @@ type Msg
     | Input String
     | SocketMessage String
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
-    | ReceiveProducts JsEncode.Value
-    | HandleSendError JsEncode.Value
+    | ReceiveProducts JE.Value
+    | HandleSendError JE.Value
 
 
 type OutMsg
@@ -112,25 +112,27 @@ update msg model =
 
         ReceiveProducts raw ->
             let
-                messageDecoder =
-                    at [ "products" ] JsDecode.string
+                productDecoder =
+                    JD.map3 Product
+                        (JD.field "title" JD.string)
+                        (JD.field "price" JD.int)
+                        (JD.field "image" JD.string)
 
-                somePayload =
-                    JsDecode.decodeValue messageDecoder raw
+                productListDecoder =
+                    JD.list productDecoder
+
+                payload =
+                    JD.decodeValue productListDecoder raw
             in
-                case somePayload of
-                    Ok payload ->
-                        ( { model | products = payload :: model.products }, Cmd.none, Nothing )
+                case payload of
+                    Ok result ->
+                        ( { model | products = result }, Cmd.none, Nothing )
 
                     Err error ->
-                        ( model, Cmd.none, Nothing )
+                        ( { model | products = [Product error 0 ""] }, Cmd.none, Nothing )
 
-        HandleSendError _ ->
-            let
-                message =
-                    "Failed to Send Message"
-            in
-                ( model, Cmd.none, Nothing )
+        HandleSendError error ->
+            ( model, Cmd.none, Nothing )
 
 
 
@@ -146,15 +148,15 @@ view model =
         ]
 
 
-productsListView : List String -> Html Msg
+productsListView : List Product -> Html Msg
 productsListView products =
     div [] (List.map productItemView products)
 
 
-productItemView : String -> Html Msg
+productItemView : Product -> Html Msg
 productItemView product =
     div []
-        [ text (product)
+        [ text (toString product)
         ]
 
 
