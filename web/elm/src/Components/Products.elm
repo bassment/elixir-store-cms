@@ -141,22 +141,24 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class (Class.getClass "text" model.classes) ]
-        [ text "Products"
-        , productsListView model.products
-        , viewChat model
+    div [] -- (Class.getClass "text" model.classes)
+        [ productsListView model.products
+        -- , viewChat model
         ]
 
 
 productsListView : List Product -> Html Msg
 productsListView products =
-    div [] (List.map productItemView products)
+    div [ class "clearfix mxn2 md-mxn3" ] (List.map productItemView products)
 
 
 productItemView : Product -> Html Msg
 productItemView product =
-    div []
-        [ text (toString product)
+    div [ class "col col-4 px2 md-px3" ]
+        [ text product.title
+        , img [ src product.image ] []
+        , text (toString product.price)
+        , text (toString product.price)
         ]
 
 
