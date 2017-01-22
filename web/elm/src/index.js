@@ -1,6 +1,8 @@
 'use strict';
 
-var Elm = require('./Main.elm');
+require('./index.html');
+var Elm = require('./Main');
+
 var app = Elm.Main.embed(document.getElementById('main'));
 
 const req = require.context('./Styles', true, /\.css$/);

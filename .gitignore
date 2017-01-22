@@ -24,6 +24,6 @@ node_modules
 /config/prod.secret.exs
 
 # Elm ignore
-web/elm/elm-stuff
+elm-stuff
 dist
 npm-debug.log

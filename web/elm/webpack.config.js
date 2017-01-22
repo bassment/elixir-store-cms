@@ -1,28 +1,28 @@
-var path = require("path");
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    devtool: 'eval-source-map',
-
-    entry: {
-        app: ['./src/index.js']
-    },
+    entry: './src/index.js',
 
     output: {
-        path: path.resolve(__dirname + '/dist/'),
-        filename: '[name].js',
-        publicPath: '/'
+        path: './dist',
+        filename: 'index.js'
     },
 
     resolve: {
+        modulesDirectories: ['node_modules'],
         extensions: ['', '.js', '.elm']
     },
 
     module: {
-        noParse: /\.elm$/,
-
         loaders: [
             {
+                test: /\.html$/,
+                exclude: [
+                    /elm-stuff/, /node_modules/
+                ],
+                loader: 'file?name=[name].[ext]'
+            }, {
                 test: /\.elm$/,
                 exclude: [
                     /elm-stuff/, /node_modules/
@@ -31,20 +31,25 @@ module.exports = {
             }, {
                 test: /\.css$/,
                 loaders: ['style?sourceMap', 'css?modules&importLoaders=1&localIdentName=[name]-[local]_[hash:base64:5]']
-            }, {
-                test: /\.(png|jpg)$/,
-                loader: 'url-loader?limit=8192'
-            }, {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000&minetype=application/font-woff"
-            }, {
-                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "file-loader"
             }
-        ]
+        ],
+
+        noParse: /\.elm$/
     },
 
-    plugins: [new HtmlWebpackPlugin({template: 'src/index.html', inject: 'body', filename: 'index.html'})],
+    plugins: [
+        new CleanWebpackPlugin(['dist'], {
+            root: __dirname,
+            verbose: true,
+            dry: false
+        }),
+        new CopyWebpackPlugin([
+            {
+                from: 'src/assets',
+                to: 'assets'
+            }
+        ])
+    ],
 
     devServer: {
         inline: true,
@@ -79,5 +84,4 @@ module.exports = {
             warnings: true
         }
     }
-
 };

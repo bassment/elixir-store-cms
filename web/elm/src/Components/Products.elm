@@ -10,17 +10,6 @@ import Json.Encode as JE
 import Json.Decode as JD
 
 
--- ENTRY POINT
--- main : Program Never ( Model, Cmd Msg ) Msg
--- main =
---     Html.program
---         { init = init ! []
---         , update = update
---         , view = view
---         , subscriptions = subscriptions
---         }
-
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
@@ -129,7 +118,7 @@ update msg model =
                         ( { model | products = result }, Cmd.none, Nothing )
 
                     Err error ->
-                        ( { model | products = [Product error 0 ""] }, Cmd.none, Nothing )
+                        ( { model | products = [ Product error 0 "" ] }, Cmd.none, Nothing )
 
         HandleSendError error ->
             ( model, Cmd.none, Nothing )
@@ -141,9 +130,11 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [] -- (Class.getClass "text" model.classes)
-        [ productsListView model.products
-        -- , viewChat model
+    div []
+        [ span [ class (Class.getClass "text" model.classes) ] [ text "Products" ]
+        , span [ class "fa fa-trash" ] [ text "123" ]
+        , productsListView model.products
+          -- , viewChat model
         ]
 
 
@@ -157,7 +148,6 @@ productItemView product =
     div [ class "col col-4 px2 md-px3" ]
         [ text product.title
         , img [ src product.image ] []
-        , text (toString product.price)
         , text (toString product.price)
         ]
 
