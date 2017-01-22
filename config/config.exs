@@ -17,6 +17,13 @@ config :baby_store, BabyStore.Endpoint,
   pubsub: [name: BabyStore.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+# Postgres pubsub
+config :baby_store, TestListener,
+  database: "baby_store_dev",
+  username: "postgres",
+  password: "",
+  hostname: "localhost"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

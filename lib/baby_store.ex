@@ -14,6 +14,7 @@ defmodule BabyStore do
       supervisor(BabyStore.Endpoint, []),
       # Start your own worker by calling: BabyStore.Worker.start_link(arg1, arg2, arg3)
       # worker(BabyStore.Worker, [arg1, arg2, arg3]),
+      worker(TestListener, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

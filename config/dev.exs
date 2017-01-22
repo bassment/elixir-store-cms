@@ -25,6 +25,11 @@ config :baby_store, BabyStore.Endpoint,
     ]
   ]
 
+# PG2 pubsub
+# config :baby_store, BabyStore.Endpoint,
+#   pubsub: [name: BabyStore.PubSub,
+#            adapter: Phoenix.PubSub.PG2]
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
