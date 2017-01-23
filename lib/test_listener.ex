@@ -7,9 +7,7 @@ defmodule TestListener do
 
   def get_message(channel, payload) do
     IO.puts inspect payload
-    products = [
-      %{title: "Product one", price: 123, image: "default"},
-    ]
+    products = BabyStore.Product |> BabyStore.Repo.all
     BabyStore.Endpoint.broadcast("store:products", "allProducts", %{products: products})
   end
 end

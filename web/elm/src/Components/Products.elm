@@ -101,6 +101,8 @@ update msg model =
 
         ReceiveProducts raw ->
             let
+                
+
                 productDecoder =
                     JD.map3 Product
                         (JD.field "title" JD.string)
