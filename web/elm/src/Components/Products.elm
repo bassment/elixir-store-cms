@@ -101,8 +101,6 @@ update msg model =
 
         ReceiveProducts raw ->
             let
-                
-
                 productDecoder =
                     JD.map3 Product
                         (JD.field "title" JD.string)
@@ -110,7 +108,7 @@ update msg model =
                         (JD.field "image" JD.string)
 
                 productListDecoder =
-                    JD.list productDecoder
+                    JD.field "products" (JD.list productDecoder)
 
                 payload =
                     JD.decodeValue productListDecoder raw
@@ -161,5 +159,5 @@ viewChat model =
         , button
             [ onClick (SocketMessage model.input)
             ]
-            [ text "Send" ]
+            [ text "Send!" ]
         ]

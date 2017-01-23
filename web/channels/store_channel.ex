@@ -1,9 +1,11 @@
 defmodule BabyStore.StoreChannel do
   use BabyStore.Web, :channel
 
+  alias BabyStore.Product
+
   def join("store:products", payload, socket) do
     if authorized?(payload) do
-      products = BabyStore.Product |> BabyStore.Repo.all
+      products = Product |> Product.sorted |> BabyStore.Repo.all
       {:ok, %{products: products}, socket}
     else
       {:error, %{reason: "unauthorized"}}

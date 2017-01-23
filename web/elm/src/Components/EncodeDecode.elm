@@ -1,5 +1,3 @@
-module Main exposing (..)
-
 import Html exposing (Html, text, div)
 import Json.Decode as JD
 import Json.Encode as JE

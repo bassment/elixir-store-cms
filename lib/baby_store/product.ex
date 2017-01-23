@@ -1,5 +1,11 @@
 defmodule BabyStore.Product do
   use Ecto.Schema
+  import Ecto.Query
+
+  def sorted(query) do
+    from p in query,
+    order_by: [asc: p.title]
+  end
 
   @derive {Poison.Encoder, only: [:title, :price, :image]}
   schema "products" do
