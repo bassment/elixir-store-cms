@@ -1,0 +1,31 @@
+@media (max-width: 40em) {
+    .container { max-width: 24rem  }
+    .xs-max-width-1 { max-width: 24rem }
+    .xs-max-width-2 { max-width: 32rem }
+    .xs-max-width-3 { max-width: 48rem }
+    .xs-max-width-4 { max-width: 64rem }
+}
+
+@media (min-width: 40em) and (max-width: 52em) {
+    .container { max-width: 32rem }
+    .sm-max-width-1 { max-width: 24rem }
+    .sm-max-width-2 { max-width: 32rem }
+    .sm-max-width-3 { max-width: 48rem }
+    .sm-max-width-4 { max-width: 64rem }
+}
+
+@media (min-width: 52em) and (max-width: 64em) {
+    .container { max-width: 48rem }
+    .md-max-width-1 { max-width: 24rem }
+    .md-max-width-2 { max-width: 32rem }
+    .md-max-width-3 { max-width: 48rem }
+    .md-max-width-4 { max-width: 64rem }
+}
+
+@media (min-width: 64em) {
+    .container { max-width: 64rem }
+    .lg-max-width-1 { max-width: 24rem }
+    .lg-max-width-2 { max-width: 32rem }
+    .lg-max-width-3 { max-width: 48rem }
+    .lg-max-width-4 { max-width: 64rem }
+}

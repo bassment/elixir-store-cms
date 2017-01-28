@@ -47,7 +47,6 @@ init =
 
         ( initSocket, phxCmd ) =
             Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
-                |> Phoenix.Socket.withoutHeartbeat
                 |> Phoenix.Socket.on "allProducts" "store:products" ReceiveProducts
                 |> Phoenix.Socket.join channel
     in
@@ -130,7 +129,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ class "container mx-auto" ]
         [ span [ class (Class.getClass "text" model.classes) ] [ text "Products" ]
         , span [ class "fa fa-trash" ] [ text "123" ]
         , productsListView model.products
@@ -140,14 +139,14 @@ view model =
 
 productsListView : List Product -> Html Msg
 productsListView products =
-    div [ class "clearfix mxn2 md-mxn3" ] (List.map productItemView products)
+    div [ class "flex flex-wrap" ] (List.map productItemView products)
 
 
 productItemView : Product -> Html Msg
 productItemView product =
-    div [ class "col col-4 px2 md-px3" ]
+    div [ class "xs-col-12 sm-col-6 md-col-4 px2" ]
         [ text product.title
-        , img [ src product.image ] []
+        , img [ src ("assets/images/" ++ product.image) ] []
         , text (toString product.price)
         ]
 

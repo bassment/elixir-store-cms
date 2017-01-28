@@ -1,7 +1,12 @@
-/*:global * {
+/*:global(*) {
     box-sizing: border-box;
+}*/
+
+/*:global(.container) {
+    color: red;
 }*/
 
 :root {
     --primary-color: red;
+    /*font-size: 1.5rem;*/
 }

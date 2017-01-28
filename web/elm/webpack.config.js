@@ -31,7 +31,8 @@ module.exports = {
             }, {
                 test: /\.css$/,
                 loaders: ['style?sourceMap', 'css?modules&importLoaders=1&localIdentName=[name]-[local]_[hash:base64:5]']
-            }
+            },
+            { test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192' }
         ],
 
         noParse: /\.elm$/
