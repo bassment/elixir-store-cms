@@ -129,34 +129,46 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "container mx-auto" ]
-        [ span [ class (Class.getClass "text" model.classes) ] [ text "Products" ]
-        , span [ class "fa fa-trash" ] [ text "123" ]
-        , productsListView model.products
-          -- , viewChat model
-        ]
-
-
-productsListView : List Product -> Html Msg
-productsListView products =
-    div [ class "flex flex-wrap" ] (List.map productItemView products)
-
-
-productItemView : Product -> Html Msg
-productItemView product =
-    div [ class "xs-col-12 sm-col-6 md-col-4 px2" ]
-        [ text product.title
-        , img [ src ("assets/images/" ++ product.image) ] []
-        , text (toString product.price)
-        ]
-
-
-viewChat : Model -> Html Msg
-viewChat model =
-    div []
-        [ input [ value model.input, onInput Input ] []
-        , button
-            [ onClick (SocketMessage model.input)
+    div [ class (Class.getClass "section" model.classes) ]
+        [ div [ class "container mx-auto" ]
+            [ h2 [] [ text "Products" ]
+            , div [ class (Class.getClass "separator" model.classes) ] []
+            , productsListView model
             ]
-            [ text "Send!" ]
         ]
+
+
+productsListView : Model -> Html Msg
+productsListView model =
+    div [ class "flex flex-wrap justify-around" ]
+        (List.map (\product -> productItemView product model ) model.products)
+
+
+productItemView : Product -> Model -> Html Msg
+productItemView product model =
+    div [ class "xs-col-12 sm-col-5 lg-col-3 bg-white my2 mx1" ]
+        [ div [ class "px2 py2" ]
+            [ div [ class ("relative " ++ (Class.getClass "image-wrapper" model.classes)) ]
+                [ img [ src ("assets/images/" ++ product.image) ] []
+                , div [ class (Class.getClass "mask" model.classes) ]
+                    [ a [ class "btn btn-outline white", href "#/products" ] [ text "Edit" ] ]
+                ]
+            , div [ class "flex py2" ]
+                [ span [ class "flex-auto italic bold" ] [ text product.title ]
+                , button [ class "btn circle bg-red" ]
+                    [ i [ class "fa fa-trash" ] [] ]
+                ]
+            ]
+        ]
+
+
+
+-- viewChat : Model -> Html Msg
+-- viewChat model =
+--     div []
+--         [ input [ value model.input, onInput Input ] []
+--         , button
+--             [ onClick (SocketMessage model.input)
+--             ]
+--             [ text "Send!" ]
+--         ]

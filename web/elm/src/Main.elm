@@ -142,7 +142,7 @@ viewNotFound =
 
 viewNavigation : Html Msg
 viewNavigation =
-    div [] (List.map viewLink [ "home", "products" ])
+    div [ class "container mx-auto" ] (List.map viewLink [ "home", "products" ])
 
 
 viewLink : String -> Html Msg

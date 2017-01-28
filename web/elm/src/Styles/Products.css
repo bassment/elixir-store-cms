@@ -1,3 +1,30 @@
-.text {
-    color: var(--primary-color);
+.separator {
+    border-bottom: 0.125em solid var(--text-color);
+    margin-bottom: 3em;
+}
+
+.section {
+    background-color: var(--body-background);
+}
+
+.mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    background-color: rgba(98, 160, 29, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+.mask a {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.image-wrapper:hover .mask {
+    opacity: 1;
 }
