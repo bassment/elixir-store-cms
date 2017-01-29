@@ -1,21 +1,20 @@
 defmodule BabyStore.StoreChannel do
   use BabyStore.Web, :channel
 
-  alias BabyStore.Product
-
   def join("store:products", payload, socket) do
     if authorized?(payload) do
-      products = Product |> Product.sorted |> BabyStore.Repo.all
-      {:ok, %{products: products}, socket}
+      {:ok, %{message: "Successfully connected!"}, socket}
     else
-      {:error, %{reason: "unauthorized"}}
+      {:error, %{reason: "Unauthorized!"}}
     end
   end
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
-  def handle_in("allProducts", _, socket) do
-    {:reply, {:ok, %{products: "A lot of products here!"}}, socket}
+  def handle_in("products", _, socket) do
+    products = BabyStore.Product.getProducts()
+    broadcast socket, "products", %{products: products}
+    {:reply, {:ok, %{message: "Sending products..."}}, socket}
   end
 
   # It is also common to receive messages from the client and
